@@ -123,6 +123,7 @@ function showMainMenu(){
   appTitle.textContent = "AEMP • Hauptmenü";
 }
 function showWorkspace(){
+  // switch views
   menuView.classList.add("hidden");
   archiveView.classList.add("hidden");
   document.getElementById("details").classList.remove("hidden");
@@ -130,11 +131,15 @@ function showWorkspace(){
   searchEl.classList.remove("hidden");
   homeBtn.classList.remove("hidden");
   appTitle.textContent = "AEMP Pack-Demo";
-  // render sets and ensure a set is selected
+
+  // fill and select
   renderSetList(searchEl.value || "");
-  if (!selectedSetId && DATA.sets && DATA.sets.length) {
+  if (!selectedSetId && Array.isArray(DATA.sets) && DATA.sets.length > 0) {
     selectedSetId = DATA.sets[0].id;
   }
+  renderSetList(searchEl.value || ""); // re-render to set active class
+  renderDetails();
+}
   renderDetails();
 }
 

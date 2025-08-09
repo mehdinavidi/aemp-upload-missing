@@ -22,7 +22,13 @@
       <input id="search" type="search" class="hidden" placeholder="Sets suchen…" />
       <div id="userBox" class="userbox hidden">
         <span id="userName"></span>
-        <button id="logoutBtn" title="Abmelden">Abmelden</button>
+        <button id="logoutBtn" class="icon-btn" title="Abmelden" aria-label="Abmelden">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </button>
       </div>
       <button id="resetData" title="Lokale Testdaten zurücksetzen">Testdaten zurücksetzen</button>
     </div>

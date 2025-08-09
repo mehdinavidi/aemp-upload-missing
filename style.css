@@ -29,7 +29,7 @@ header {
   position: sticky; top: 0; z-index: 3; backdrop-filter: blur(6px);
 }
 header .left { display:flex; align-items:center; gap:8px; }
-.icon-btn { border-radius: 10px; min-width: 40px; height: 40px; font-size: 20px; background: var(--chip); border: 1px solid var(--chip-border); color: var(--text); display: inline-flex; align-items: center; justify-content: center; }
+.icon-btn { border-radius: 10px; min-width: 40px; height: 40px; font-size: 18px; background: var(--chip); border: 1px solid var(--chip-border); color: var(--text); display: inline-flex; align-items: center; justify-content: center; }
 .abs-close { position:absolute; top: 8px; right: 8px; }
 .mobile-only { display:none; }
 h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: .2px; }
