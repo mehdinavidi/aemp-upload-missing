@@ -1,9 +1,8 @@
 
-// core.js – Daten, Storage, DOM-Refs
+// core.js
 const USERS = new Set(["ips-1","ips-2","ips-3","ips-4","ips-5"]);
 const PASS  = "bilder";
 
-// Seed-Daten
 const DATA = {
   sets: [
     { id:1, code:"ACH-101", name:"Standard-OP Set", department:"Chirurgie" },
@@ -36,7 +35,6 @@ const DATA = {
 };
 const MISSING_REASONS = ["Reparatur","Verlust","in Steri","Sonstiges"];
 
-// Storage Keys
 const KEY_SESSIONS="aemp_sessions_v1"; const KEY_USER="aemp_user_v1";
 const KEY_IMG_SETS="aemp_img_sets_v1"; const KEY_IMG_INST="aemp_img_inst_v1";
 
@@ -51,7 +49,7 @@ function resetSessions(){ localStorage.removeItem(KEY_SESSIONS); localStorage.re
 function loadImgOverrides(){ return { sets: loadJSON(KEY_IMG_SETS, {}), inst: loadJSON(KEY_IMG_INST, {}) }; }
 function saveImgOverrides(ov){ saveJSON(KEY_IMG_SETS, ov.sets); saveJSON(KEY_IMG_INST, ov.inst); }
 
-// DOM Refs
+// DOM
 const setListEl = document.getElementById("setList");
 const detailsEl = document.getElementById("details");
 const searchEl = document.getElementById("search");
@@ -63,6 +61,7 @@ const homeBtn = document.getElementById("homeBtn");
 const menuView = document.getElementById("menu");
 const appTitle = document.getElementById("appTitle");
 const btnPackplatz = document.getElementById("btnPackplatz");
+const btnSteri = document.getElementById("btnSteri");
 
 let selectedSetId = null;
 
@@ -74,10 +73,10 @@ const modalClose = document.getElementById("modalClose");
 const cancelPack = document.getElementById("cancelPack");
 const savePack = document.getElementById("savePack");
 
-const lbBackdrop = document.getElementById("lightboxBackdrop");
-const lbImg = document.getElementById("lightboxImg");
-const lbCaption = document.getElementById("lightboxCaption");
-const lbClose = document.getElementById("lightboxClose");
+const lightboxBackdrop = document.getElementById("lightboxBackdrop");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxCaption = document.getElementById("lightboxCaption");
+const lightboxClose = document.getElementById("lightboxClose");
 
 const reportBackdrop = document.getElementById("reportBackdrop");
 const reportBody = document.getElementById("reportBody");
@@ -103,7 +102,6 @@ function getSetLines(setId){
   return DATA.setInstruments.filter(si=>si.set_id===setId)
     .map(si=>({ ...si, instrument: DATA.instruments.find(i=>i.id===si.instrument_id) }));
 }
-
 function computeSetStatus(setId){
   const sess = loadSessions()[setId];
   if (!sess) return { label:"neu", cls:"" };
@@ -116,8 +114,3 @@ function computeSetStatus(setId){
   }
   return { label:"in Arbeit", cls:"warn" };
 }
-  return { label:"in Arbeit", cls:"warn" };
-}
-
-window.DATA = DATA; window.MISSING_REASONS = MISSING_REASONS;
-window.selectedSetId = selectedSetId;

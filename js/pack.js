@@ -1,10 +1,15 @@
 
-function generateLabel(setObj){ const d=new Date(); const y=d.getFullYear().toString().slice(2); const m=("0"+(d.getMonth()+1)).slice(-2); const day=("0"+d.getDate()).slice(-2); const rnd=Math.random().toString(36).slice(2,7).toUpperCase(); return `ETK-${setObj.code}-${y}${m}${day}-${rnd}`; }
+function generateLabel(setObj){
+  const d=new Date(); const y=d.getFullYear().toString().slice(2);
+  const m=("0"+(d.getMonth()+1)).slice(-2); const day=("0"+d.getDate()).slice(-2);
+  const rnd=Math.random().toString(36).slice(2,7).toUpperCase();
+  return `ETK-${setObj.code}-${y}${m}${day}-${rnd}`;
+}
 
 function openPackModalV2(setObj, lines){
   const u = getUser(); if(!u){ requireLogin(); return; }
   modalTitle.textContent = `Packvorgang – ${setObj.code} (User: ${u.username})`;
-  modalBackdrop.classList.remove("hidden"); modalBackdrop.classList.add("show");
+  modalBackdrop.classList.add("show");
   if (!lines || !Array.isArray(lines) || !lines.length) lines = getSetLines(selectedSetId);
 
   const bodyRows = lines.map(l=>`
@@ -42,9 +47,9 @@ function openPackModalV2(setObj, lines){
     const badge = tr.querySelector(".status-badge");
     const reason = tr.querySelector(".reasonSel");
     badge.classList.remove("status-ok","status-warn","status-bad");
-    if (val>=req){ badge.textContent="✔"; badge.classList.add("status-ok"); badge.title="vollständig"; reason.disabled=true; reason.value=""; }
-    else if (val===0){ badge.textContent="✖"; badge.classList.add("status-bad"); badge.title="komplett fehlt"; reason.disabled=false; }
-    else { badge.textContent="❗"; badge.classList.add("status-warn"); badge.title="teilweise fehlt"; reason.disabled=false; }
+    if (val>=req){ badge.textContent="✔"; badge.classList.add("status-ok"); reason.disabled=true; reason.value=""; }
+    else if (val===0){ badge.textContent="✖"; badge.classList.add("status-bad"); reason.disabled=false; }
+    else { badge.textContent="❗"; badge.classList.add("status-warn"); reason.disabled=false; }
   }
   function renderCounts(){
     const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
@@ -68,11 +73,10 @@ function openPackModalV2(setObj, lines){
     sync();
   });
 }
-function closeModal(){ modalBackdrop.classList.remove("show"); modalBackdrop.classList.add("hidden"); }
+function closeModal(){ modalBackdrop.classList.remove("show"); }
 
 modalClose.addEventListener("click", closeModal);
 cancelPack.addEventListener("click", closeModal);
-
 
 savePack.addEventListener("click", ()=>{
   if (!selectedSetId) return;
@@ -107,53 +111,21 @@ savePack.addEventListener("click", ()=>{
   closeModal(); renderSetList(searchEl.value); renderDetails();
   alert("Packvorgang gespeichert. Etikett: " + label);
 });
-  const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
-  const captured = rows.map((tr, idx)=>{
-    const req = lines[idx].qty_required;
-    const qty_found = parseInt(tr.querySelector(".qtyInput").value||"0",10);
-    const missing = qty_found < req;
-    const reason = tr.querySelector(".reasonSel").value || null;
-    const note = tr.querySelector(".note").value || null;
-    return { instrument_id: lines[idx].instrument_id, instrument_name: lines[idx].instrument.name, qty_required:req, qty_found, missing, reason, note };
-  });
-  const hasMissing = captured.some(l=> (l.qty_required-l.qty_found)>0 || l.missing );
-  const sessions = loadSessions();
-  sessions[selectedSetId] = {
-    set_id: selectedSetId,
-    started_by: sessions[selectedSetId]?.started_by || u.username,
-    started_at: sessions[selectedSetId]?.started_at || new Date().toISOString(),
-    closed_by: u.username,
-    closed_at: new Date().toISOString(),
-    status: hasMissing ? "closed_with_missing" : "closed_ok",
-    lines: captured
-  };
-  saveSessions(sessions);
-  closeModal(); renderSetList(searchEl.value); renderDetails();
-  alert("Packvorgang gespeichert.");
-});
-
-function editExistingPack(setId){ alert("Bearbeiten folgt später."); }
-function releaseCurrentPack(setId){ alert("Freigabe folgt später."); }
 
 function cancelCurrentPack(setId){
   const s = loadSessions();
   const sess = s[setId];
   if (!sess){ alert("Kein Packvorgang vorhanden."); return; }
-  // Pflichtfeld: Hinweis
   let reason = "";
   while (true){
     reason = prompt("Bitte einen Hinweis zur Stornierung eingeben (Pflichtfeld):", "");
-    if (reason === null) { return; } // Abbruch
+    if (reason === null) { return; }
     if ((reason||"").trim().length >= 3) break;
     alert("Hinweis ist Pflicht (mind. 3 Zeichen).");
   }
   if (!confirm("Diesen Packvorgang wirklich stornieren?\nHinweis: " + reason.trim())) return;
-  // Optional: du kannst den Hinweis z.B. in der Console sehen oder später speichern
-  console.log("Packvorgang storniert. Hinweis:", reason.trim());
   delete s[setId];
   saveSessions(s);
-  renderSetList(searchEl.value);
-  renderDetails();
+  renderSetList(searchEl.value); renderDetails();
   alert("Packvorgang storniert.");
 }
-

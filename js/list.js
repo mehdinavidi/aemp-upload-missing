@@ -1,17 +1,14 @@
 
 function renderSetList(filter=""){
-  const q = (filter||"").trim().toLowerCase();
+  const q=(filter||"").toLowerCase();
   setListEl.innerHTML="";
-  const results = DATA.sets.filter(s=> s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
-  if (!results.length){
-    setListEl.innerHTML = '<div class="placeholder">Keine Sets gefunden.</div>';
-    return;
-  }
-  results.forEach(s=>{
+  const res = DATA.sets.filter(s=> s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+  if(!res.length){ setListEl.innerHTML='<div class="placeholder">Keine Sets gefunden.</div>'; return; }
+  res.forEach(s=>{
     const status = computeSetStatus(s.id);
     const ov = loadImgOverrides().sets[s.code];
     const item = document.createElement("div");
-    item.className = "item" + (s.id===selectedSetId?" active":"");
+    item.className="item"+(s.id===selectedSetId?" active":"");
     item.innerHTML = `
       <img class="thumb" src="${ov?ov.thumb:""}" alt="${s.code} Bild">
       <div><div class="title">${s.code} – ${s.name}</div><div class="subtle">${s.department}</div></div>
