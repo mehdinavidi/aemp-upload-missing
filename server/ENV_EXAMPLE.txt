@@ -1,0 +1,4 @@
+GITHUB_TOKEN=ghp_xxx
+GITHUB_OWNER=dein-user
+GITHUB_REPO=aemp-uploads
+GITHUB_BRANCH=main
