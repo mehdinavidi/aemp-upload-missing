@@ -29,7 +29,7 @@ header {
   position: sticky; top: 0; z-index: 3; backdrop-filter: blur(6px);
 }
 header .left { display:flex; align-items:center; gap:8px; }
-.icon-btn { border-radius: 10px; min-width: 40px; height: 40px; font-size: 20px; background: var(--chip); border: 1px solid var(--chip-border); color: var(--text); }
+.icon-btn { border-radius: 10px; min-width: 40px; height: 40px; font-size: 20px; background: var(--chip); border: 1px solid var(--chip-border); color: var(--text); display: inline-flex; align-items: center; justify-content: center; }
 .abs-close { position:absolute; top: 8px; right: 8px; }
 .mobile-only { display:none; }
 h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: .2px; }
@@ -108,7 +108,7 @@ section#details h2 { margin: 0 0 8px; font-size: 20px; }
 #lightbox img { max-width: 100%; max-height: 70vh; border-radius: 12px; border: 2px solid #fff2; background: #000; }
 #lightboxCaption { margin-top: 8px; color: #cfe1ff; font-size: 13px; text-align: center; }
 
-/* Responsive / mobile drawer & full-screen modals */
+/* Responsive */
 @media (max-width: 900px) {
   .mobile-only { display:inline-flex; }
   #search.hidden { display: none !important; }

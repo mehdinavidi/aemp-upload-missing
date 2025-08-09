@@ -1,18 +1,31 @@
 
-# AEMP Pack-Demo – Upload-on-missing (GitHub Pages-ready)
+# AEMP Pack-Demo (Hauptmenü + Freigabe + Mobile + Home-Button)
 
 **Login:** `ips-1` … `ips-5` / Passwort `bilder`
 
-## Neu
-- Nach dem Login werden **alle Sets/Instrumente ohne Bild** erkannt.
-- Du wirst **gefragt, ob du ein Bild hochladen** möchtest (oder **überspringen**).
-- Die Bilder werden **lokal im Browser (localStorage)** als Data-URL gespeichert. Kein Server nötig.
+## Neu in diesem Build
+- **Home-Button (Haus-Icon)** in der Kopfzeile – sichtbar **nur außerhalb** des Hauptmenüs.
+- Klick auf 🏠 führt direkt zurück ins **Hauptmenü**, ohne Logout.
+- Bestehende Features bleiben: Packplätze, Arbeitsplatz, Archiv/Freigaben, Upload bei fehlenden Bildern, mobile Drawer/Modals.
 
-## Veröffentlichen
-1. Alle Dateien ins **Repo-Root** hochladen: `index.html`, `style.css`, `app.js`, `README.md`.
-2. **Settings → Pages:** Deploy from a branch → `main` / `/ (root)`.
-3. Nach ~1 Minute ist die Seite online.
+## Dateien
+- `index.html` – UI mit Home-Button
+- `style.css` – Styles (responsive, mobilefreundlich)
+- `app.js` – Logik inkl. Home-Button-Steuerung und View-Wechsel
+- `README.md` – diese Anleitung
 
-## Hinweise
-- Hochgeladene Bilder bleiben **nur auf dem Gerät/Browser** gespeichert (localStorage). Andere Geräte sehen sie nicht.
-- Später können wir einen Upload zu deinem Server/Backend einbauen (API), damit Bilder zentral gespeichert werden.
+## Schnellstart (GitHub Pages)
+1. Dateien ins Repo-Root hochladen/ersetzen.
+2. Pages aktivieren: Settings → Pages → Deploy from a branch → `main`/`/(root)`.
+3. Seite aufrufen und testen (Hard-Reload: Strg/Cmd+Shift+R).
+
+## Nutzung
+1. **Anmelden** (ips-1…ips-5 / bilder).
+2. **Packplatz wählen** → **Zum Arbeitsplatz**.
+3. Sets auswählen, **Packvorgang starten**, speichern, **Freigeben** (landet im Archiv), **Bearbeiten**/**Stornieren** vor Freigabe möglich.
+4. **🏠 Home-Button** bringt dich jederzeit zurück zum **Hauptmenü** (im Hauptmenü selbst ausgeblendet).
+
+## Bilder
+- Wenn Bilder fehlen, kommt nach Login ein Upload-Dialog (lokale Speicherung via `localStorage`).
+
+Viel Spaß! Sag Bescheid, wenn der Home-Button zusätzlich **nur für bestimmte Rollen** sichtbar sein soll – kann ich schnell ergänzen.

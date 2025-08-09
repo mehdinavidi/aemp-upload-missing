@@ -14,7 +14,12 @@
       <h1 id="appTitle">AEMP Pack-Demo</h1>
     </div>
     <div class="actions">
-      <button id="backToMenu" class="secondary hidden">Hauptmenü</button>
+      <button id="homeBtn" class="icon-btn hidden" title="Hauptmenü" aria-label="Hauptmenü">
+        <!-- simple home icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
       <input id="search" type="search" class="hidden" placeholder="Sets suchen…" />
       <div id="userBox" class="userbox hidden">
         <span id="userName"></span>
