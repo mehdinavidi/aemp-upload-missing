@@ -1,45 +1,39 @@
 
-# AEMP Pack-Demo – Ein Packplatz, Hauptmenü & Bildverwaltung per Button (V.1.0.08)
+# AEMP Pack-Demo – V.1.2.00 (modular + GitHub Upload)
 
-**Login:** `ips-1` … `ips-5` • Passwort `bilder`
+## Features
+- Login (ips-1…ips-5 / bilder) → Hauptmenü → Packplatz
+- Setliste links, Details rechts, Bilder je Set/Instrument hochladen/löschen
+- Packvorgang mit **Soll/Ist**, Status pro Zeile (✔ / ❗ / ✖) + Live-Zähler
+- Report-Modal mit Druckansicht
+- Mobile-optimiert (Drawer)
+- **Modulare JS-Struktur** (/js)
+- **Serverseitiger Upload nach GitHub** via `/server` (Vercel)
 
-## Was ist neu
-- **Nach Login** landest du **immer im Hauptmenü**.
-- Hauptmenü mit **zwei Buttons**:
-  - **Packplatz** → direkt zur Arbeitsplatz-Ansicht (Setliste/Details) wie früher.
-  - **Steri-Freigabe** → **Platzhalter** (grau, deaktiviert) – bauen wir später.
-- **Bilder-Upload**: keine Abfrage mehr bei fehlenden Bildern.
-  - In **Set-Details**: Buttons **„Bild hochladen/ändern“** und **„Bild löschen“**.
-  - In **Instrument-Zeilen**: je **„Bild ändern“** und **„Löschen“**.
-  - Uploads werden **lokal (Browser, localStorage)** gespeichert.
-- **Home-Button (🏠)** in der Kopfzeile – sichtbar nur außerhalb des Hauptmenüs – bringt zurück ins Hauptmenü.
-- Packfunktionen bleiben: **Starten, Bearbeiten, Stornieren, Freigeben, Report**, Archivierung nach Freigabe.
+## Lokaler Test
+1. Öffne `index.html` im Browser (doppelklick).
+2. Login: `ips-1` / `bilder`.
+3. Im Packplatz: Bilder hochladen (bleiben lokal, oder auf GitHub wenn `UPLOAD_ENDPOINT` gesetzt ist).
 
-## Dateien
-- `index.html` – UI (Hauptmenü, Arbeitsplatz, Modals)
-- `style.css` – Styles (mobilfreundlich, Drawer, disabled-Buttons)
-- `app.js` – Logik (Login → Hauptmenü, Packen, Archiv, Bild hochladen & löschen)
-- `README.md` – diese Anleitung
+## GitHub-Upload aktivieren
+1. `/server` bei **Vercel** deployen (siehe `server/ENV_EXAMPLE.txt` Variablen).
+2. Oben in `index.html` `window.UPLOAD_ENDPOINT` setzen, z. B.:
+   ```html
+   <script>window.UPLOAD_ENDPOINT="https://aemp-upload-proxy.vercel.app/api";</script>
+   ```
+3. Danach werden Bilder beim Upload **ins GitHub-Repo** gespeichert, URL kommt zurück und wird als Bildquelle verwendet.
 
-## GitHub Pages – Deploy
-1. Alle Dateien ins Repo-Root hochladen/ersetzen.
-2. **Settings → Pages**: Deploy from a branch → `main` / `/ (root)`.
-3. Seite öffnen, Hard-Reload: **Strg/Cmd + Shift + R**.
+## Struktur
+- `index.html`, `style.css`, `favicon.svg`
+- `js/`
+  - `core.js` – Daten, Storage, DOM-Referenzen
+  - `auth.js` – Login/Hauptmenü/Navigation
+  - `list.js` – Setliste
+  - `details.js` – Detailseite + Bildverwaltung
+  - `pack.js` – Packdialog + Speichern
+  - `report.js` – Report & Drucken
+  - `init.js` – Event-Wiring & Bootstrap
+  - `github.js` – Client-Helper für Upload/Remove
+- `server/` – Vercel-Functions für Upload & Delete
 
-## Bedienung
-1. Anmelden (`ips-1`…`ips-5` / `bilder`) → Hauptmenü.
-2. **Packplatz** → Arbeitsplatz-Ansicht. Links Set wählen.
-3. Im Set-Detail: Bilder verwalten, **Packvorgang starten**, speichern.
-4. **Freigeben**: Vorgang wandert ins Archiv, Set ist wieder frei.
-5. **🏠** zurück ins Hauptmenü.
-
-## Nächste Schritte (wenn du willst)
-- „Steri‑Freigabe“-Seite mit Workflow & Berechtigungen.
-- Zentrale Bildspeicherung (statt localStorage) via API.
-- Barcode-Scan & PWA-Offlinebetrieb.
-
-Viel Erfolg! Wenn irgendwo eine Kleinigkeit hakt, sag Bescheid – ich patch’ es fix.
-
-- V.1.0.08: Packdialog mit Soll/Ist + Status-Icons (✔ / ❗ / ✖) und Live-Zählern.
-
-- V.1.0.09: JS modularisiert in /js (core, auth, list, details, pack, report, init).
+Viel Spaß! Änderungen gern durchgeben – ich passe schnell an.

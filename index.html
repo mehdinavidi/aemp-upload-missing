@@ -1,77 +1,101 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AEMP Pack-Demo</title>
-  <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
+  <header class="appbar">
     <div class="left">
-      <button id="toggleSidebar" class="icon-btn mobile-only" aria-label="Sets öffnen">☰</button>
+      <button id="homeBtn" class="icon-btn" title="Home" aria-label="Home">🏠</button>
       <h1 id="appTitle">AEMP Pack-Demo</h1>
     </div>
-    <div class="actions">
-      <button id="homeBtn" class="icon-btn hidden" title="Hauptmenü" aria-label="Hauptmenü">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
-      </button>
-      <input id="search" type="search" class="hidden" placeholder="Sets suchen…" />
+    <div class="right">
+      <input id="search" class="search" placeholder="Sets suchen…" />
+      <button id="resetData" class="ghost">Testdaten zurücksetzen</button>
       <div id="userBox" class="userbox hidden">
-        <span id="userName"></span>
-        <button id="logoutBtn" class="icon-btn" title="Abmelden" aria-label="Abmelden">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </button>
+        <span id="userName">-</span>
+        <button id="logoutBtn" class="icon-btn" title="Abmelden" aria-label="Abmelden">⇦</button>
       </div>
-      <button id="resetData" title="Lokale Testdaten zurücksetzen">Testdaten zurücksetzen</button>
     </div>
   </header>
 
-  <main>
-    <div id="drawerBackdrop" class="drawer-backdrop"></div>
-    <aside id="setList" class="drawer hidden"></aside>
-
-    <section id="menu" class="view">
-      <div class="menu-card">
-        <h2>Hauptmenü</h2>
-        <div class="menu-actions">
-          <button id="btnPackplatz" class="primary big">Packplatz</button>
-          <button id="btnSteri" class="disabled big" title="Demnächst">Steri‑Freigabe (in Arbeit)</button>
+  <!-- Login Overlay -->
+  <div id="loginOverlay" class="overlay show">
+    <div class="sheet login">
+      <h2>Anmeldung</h2>
+      <form id="loginForm">
+        <label>Benutzer
+          <input id="loginUser" placeholder="ips-1 … ips-5" autocomplete="username" required />
+        </label>
+        <label>Passwort
+          <input id="loginPass" type="password" placeholder="bilder" autocomplete="current-password" required />
+        </label>
+        <div class="row">
+          <button type="submit" class="primary">Anmelden</button>
         </div>
-      </div>
-    </section>
+      </form>
+    </div>
+  </div>
 
-    <section id="details" class="view hidden">
-      <div class="placeholder">
-        <h2>Wähle links ein Set aus</h2>
-        <p>Dann siehst du hier die Details und kannst den Packvorgang starten.</p>
+  <!-- Hauptmenü -->
+  <main id="menu" class="view">
+    <div class="card menu">
+      <h2>Hauptmenü</h2>
+      <div class="vstack">
+        <button id="btnPackplatz" class="primary lg">Packplatz</button>
+        <button id="btnSteri" class="ghost lg" disabled>Steri-Freigabe (in Arbeit)</button>
       </div>
-    </section>
-
-    <section id="archiveView" class="view hidden">
-      <div class="menu-card">
-        <h2>Archiv / Freigegebene Packvorgänge</h2>
-        <div id="archiveList" class="archive-list"></div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Pack Modal -->
-  <div id="modalBackdrop" class="hidden overlay">
-    <div id="modal" class="sheet">
+  <!-- Packplatz -->
+  <main class="view grid">
+    <aside id="setList" class="sidebar"></aside>
+    <section id="details" class="details"></section>
+  </main>
+
+  <!-- Drawer backdrop for mobile -->
+  <div id="drawerBackdrop" class="backdrop"></div>
+
+  <!-- Lightbox -->
+  <div id="lightboxBackdrop" class="overlay hidden">
+    <div class="sheet lightbox">
+      <img id="lightboxImg" alt="" />
+      <div id="lightboxCaption" class="muted"></div>
+      <button id="lightboxClose" class="icon-btn abs">×</button>
+    </div>
+  </div>
+
+  <!-- Upload modal -->
+  <div id="uploadBackdrop" class="overlay hidden">
+    <div class="sheet modal">
+      <div class="modal-header">
+        <h3 id="uploadTitle">Bild hochladen</h3>
+        <button id="uploadClose" class="icon-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="file" id="uploadFile" accept="image/*" />
+      </div>
+      <div class="modal-footer">
+        <button id="uploadCancel">Abbrechen</button>
+        <button id="uploadSave" class="primary" disabled>Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Packvorgang modal -->
+  <div id="modalBackdrop" class="overlay hidden">
+    <div class="sheet modal">
       <div class="modal-header">
         <h3 id="modalTitle">Packvorgang</h3>
-        <button id="modalClose" aria-label="Schließen" class="icon-btn">×</button>
+        <button id="modalClose" class="icon-btn">×</button>
       </div>
-      <div class="modal-body" id="modalBody"></div>
+      <div id="modalBody" class="modal-body"></div>
       <div class="modal-footer sticky-footer">
         <button id="cancelPack">Abbrechen</button>
         <button id="savePack" class="primary">Speichern & Abschließen</button>
@@ -79,71 +103,32 @@
     </div>
   </div>
 
-  <!-- Lightbox Modal -->
-  <div id="lightboxBackdrop" class="hidden overlay" aria-hidden="true">
-    <div id="lightbox" class="sheet">
-      <img id="lightboxImg" alt="Vorschau" />
-      <div id="lightboxCaption"></div>
-      <button id="lightboxClose" aria-label="Bild schließen" class="icon-btn abs-close">×</button>
-    </div>
-  </div>
-
-  <!-- Report Modal -->
-  <div id="reportBackdrop" class="hidden overlay">
-    <div id="reportModal" class="sheet">
-      <header class="report-header">
+  <!-- Report modal -->
+  <div id="reportBackdrop" class="overlay hidden">
+    <div class="sheet modal" id="reportModal">
+      <div class="modal-header">
         <h3 id="reportTitle">Packreport</h3>
-        <div class="report-actions">
-          <button id="reportPrint">Drucken</button>
-          <button id="reportClose" class="primary">Schließen</button>
-        </div>
-      </header>
-      <div id="reportBody" class="report-body"></div>
+        <button id="reportClose" class="icon-btn">×</button>
+      </div>
+      <div id="reportBody" class="modal-body"></div>
+      <div class="modal-footer">
+        <button id="reportPrint" class="primary">Drucken</button>
+      </div>
     </div>
   </div>
 
-  <!-- Upload Modal (manual trigger) -->
-  <div id="uploadBackdrop" class="hidden overlay">
-    <div id="uploadModal" class="sheet">
-      <header class="upload-header">
-        <h3 id="uploadTitle">Bild hinzufügen/ändern</h3>
-        <button id="uploadClose" aria-label="Schließen" class="icon-btn">×</button>
-      </header>
-      <div class="upload-body" id="uploadBody">
-        <div class="upload-controls">
-          <input id="uploadFile" type="file" accept="image/*" capture="environment" />
-        </div>
-      </div>
-      <footer class="upload-footer sticky-footer">
-        <button id="uploadCancel">Abbrechen</button>
-        <button id="uploadSave" class="primary" disabled>Hochladen</button>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Login Overlay -->
-  <div id="loginOverlay" class="login-overlay hidden overlay">
-    <form id="loginForm" class="login-card" autocomplete="off">
-      <h3>Anmeldung</h3>
-      <p class="muted">Demo-User: <code>ips-1</code> … <code>ips-5</code> • Passwort: <code>bilder</code></p>
-      <label>Benutzername
-        <input id="loginUser" name="user" required placeholder="z. B. ips-1" autocomplete="username" />
-      </label>
-      <label>Passwort
-        <input id="loginPass" type="password" name="pass" required placeholder="Passwort" autocomplete="current-password" />
-      </label>
-      <div class="login-actions">
-        <button type="submit" class="primary">Anmelden</button>
-      </div>
-    </form>
-  </div>
-
+  <!-- GitHub upload endpoint (configure) -->
+  <script>
+    // Set this to your deployed serverless URL, e.g. "https://aemp-upload-proxy.vercel.app/api"
+    window.UPLOAD_ENDPOINT = "";
+  </script>
+  <script src="js/github.js"></script>
   <script src="js/core.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/list.js"></script>
-<script src="js/details.js"></script>
-<script src="js/pack.js"></script>
-<script src="js/report.js"></script>
-<script src="js/init.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/list.js"></script>
+  <script src="js/details.js"></script>
+  <script src="js/pack.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/init.js"></script>
 </body>
 </html>
