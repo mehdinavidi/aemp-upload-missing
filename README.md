@@ -41,3 +41,5 @@
 Viel Erfolg! Wenn irgendwo eine Kleinigkeit hakt, sag Bescheid – ich patch’ es fix.
 
 - V.1.0.08: Packdialog mit Soll/Ist + Status-Icons (✔ / ❗ / ✖) und Live-Zählern.
+
+- V.1.0.09: JS modularisiert in /js (core, auth, list, details, pack, report, init).
