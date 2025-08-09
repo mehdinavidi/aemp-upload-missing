@@ -136,14 +136,20 @@ function showWorkspace(){
 function requireLogin(){
   const u = getUser();
   if (!u){
+    console.log("no user -> show login");
     loginOverlay.classList.remove("hidden");
     userBox.classList.add("hidden");
+    homeBtn.classList.add("hidden");
+    menuView.classList.add("hidden");
+    document.getElementById("details").classList.add("hidden");
+    setListEl.classList.add("hidden");
+    searchEl.classList.add("hidden");
   } else {
+    console.log("user present:", u.username);
     loginOverlay.classList.add("hidden");
     userBox.classList.remove("hidden"); userBox.style.display='flex';
     userNameEl.textContent = u.username;
-    showMainMenu(); // immer ins Menü
-    // pre-render so Workspace später sofort da ist
+    showMainMenu();
     renderSetList(searchEl.value || "");
     renderDetails();
   }
@@ -311,6 +317,7 @@ function openPackModal(setObj, lines){
   modalTitle.textContent = `Packvorgang – ${setObj.code} (User: ${u.username})`;
   modalBackdrop.classList.remove('hidden'); modalBackdrop.style.display='flex';
   modalBackdrop.classList.remove("hidden"); modalBackdrop.classList.add("show");
+  console.log('openPackModal lines:', Array.isArray(lines)?lines.length:lines);
   const rows = lines.map((l, idx)=>`
     <tr data-idx="${idx}">
       <td>${hasAnyImage(l.instrument) ? `<img class="ithumb" src="${imgThumb(l.instrument)}" alt="${l.instrument.name}" data-zoom-src="${imgFull(l.instrument)}" data-caption="${l.instrument.name}">` : '<span class="meta">kein Bild</span>'}</td>
@@ -321,6 +328,7 @@ function openPackModal(setObj, lines){
       <td><select class="reasonSel"><option value="">— Grund wählen —</option>${MISSING_REASONS.map(r=>`<option value="${r}">${r}</option>`).join("")}</select></td>
       <td><textarea class="note" rows="1" placeholder="Notiz (optional)"></textarea></td>
     </tr>`).join("");
+  if (!lines || !Array.isArray(lines) || !lines.length) { lines = getSetLines(selectedSetId); console.warn('reloaded lines in modal:', lines.length); }
   modalBody.innerHTML = `<table class="table"><thead><tr><th></th><th>Instrument</th><th class="qty">Soll</th><th class="qty">Ist</th><th>Fehlteil?</th><th>Grund</th><th>Notiz</th></tr></thead><tbody>${rows}</tbody></table>`;
 
   // wire
@@ -444,55 +452,3 @@ renderSetList = function(filter=""){
 requireLogin();
 
 
-// --- V.1.0.05: ensure modal exists and can be shown ---
-function ensureModalExists(){
-  let mb = document.getElementById("modalBackdrop");
-  if (!mb){
-    const tpl = document.createElement('div');
-    tpl.innerHTML = `
-      <div id="modalBackdrop" class="overlay">
-        <div id="modal" class="sheet">
-          <div class="modal-header">
-            <h3 id="modalTitle">Packvorgang</h3>
-            <button id="modalClose" aria-label="Schließen" class="icon-btn">×</button>
-          </div>
-          <div class="modal-body" id="modalBody"></div>
-          <div class="modal-footer sticky-footer">
-            <button id="cancelPack">Abbrechen</button>
-            <button id="savePack" class="primary">Speichern & Abschließen</button>
-          </div>
-        </div>
-      </div>`;
-    document.body.appendChild(tpl.firstElementChild);
-    // rebind refs
-    window.modalBackdrop = document.getElementById("modalBackdrop");
-    window.modalBody = document.getElementById("modalBody");
-    window.modalTitle = document.getElementById("modalTitle");
-    window.modalClose = document.getElementById("modalClose");
-    window.cancelPack = document.getElementById("cancelPack");
-    window.savePack = document.getElementById("savePack");
-    // close wiring
-    modalClose.onclick = closeModal;
-    cancelPack.onclick = closeModal;
-  }
-}
-
-const _origOpenPackModal = openPackModal;
-openPackModal = function(setObj, lines){
-  ensureModalExists();
-  try {
-    _origOpenPackModal(setObj, lines);
-    // force visible
-    modalBackdrop.classList.remove('hidden');
-    modalBackdrop.classList.add('show');
-    Object.assign(modalBackdrop.style, {display:'flex', position:'fixed', inset:'0', zIndex:'9999'});
-    // sanity check
-    const visible = window.getComputedStyle(modalBackdrop).display !== 'none' && modalBackdrop.classList.contains('show');
-    if (!visible){
-      alert("Hinweis: Der Packdialog konnte nicht sichtbar gemacht werden. Bitte neu laden (Strg+Shift+R).");
-    }
-  } catch (e){
-    console.error("Fehler beim Öffnen des Packdialogs:", e);
-    alert("Unerwarteter Fehler beim Öffnen des Packdialogs. Details in der Konsole.");
-  }
-};
