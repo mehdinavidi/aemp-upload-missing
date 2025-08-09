@@ -114,7 +114,7 @@ function showMainMenu(){
   archiveView.classList.add("hidden");
   setListEl.classList.add("hidden");
   searchEl.classList.add("hidden");
-  homeBtn.classList.add("hidden"); userBox.classList.remove("hidden");
+  homeBtn.classList.add("hidden"); userBox.classList.remove("hidden"); userBox.style.display='flex';
   appTitle.textContent = "AEMP • Hauptmenü";
 }
 function showWorkspace(){
@@ -123,7 +123,7 @@ function showWorkspace(){
   document.getElementById("details").classList.remove("hidden");
   setListEl.classList.remove("hidden");
   searchEl.classList.remove("hidden");
-  homeBtn.classList.remove("hidden"); userBox.classList.remove("hidden");
+  homeBtn.classList.remove("hidden"); userBox.classList.remove("hidden"); userBox.style.display='flex';
   appTitle.textContent = "AEMP Pack-Demo";
 
   renderSetList(searchEl.value || "");
@@ -140,7 +140,7 @@ function requireLogin(){
     userBox.classList.add("hidden");
   } else {
     loginOverlay.classList.add("hidden");
-    userBox.classList.remove("hidden");
+    userBox.classList.remove("hidden"); userBox.style.display='flex';
     userNameEl.textContent = u.username;
     showMainMenu(); // immer ins Menü
     // pre-render so Workspace später sofort da ist
@@ -156,7 +156,7 @@ loginForm.addEventListener("submit", (e)=>{
   setUser({ username });
   requireLogin();
 });
-logoutBtn.addEventListener("click", ()=>{ logoutUser(); selectedSetId = null; requireLogin(); });
+logoutBtn.addEventListener("click", (e)=>{ e.preventDefault(); console.log('logout clicked'); logoutUser(); selectedSetId = null; requireLogin(); });
 homeBtn.addEventListener("click", showMainMenu);
 
 // Lightbox
@@ -309,7 +309,7 @@ function renderDetails(){
 function openPackModal(setObj, lines){
   const u = getUser(); if (!u){ requireLogin(); return; }
   modalTitle.textContent = `Packvorgang – ${setObj.code} (User: ${u.username})`;
-  modalBackdrop.classList.remove('hidden');
+  modalBackdrop.classList.remove('hidden'); modalBackdrop.style.display='flex';
   modalBackdrop.classList.remove("hidden"); modalBackdrop.classList.add("show");
   const rows = lines.map((l, idx)=>`
     <tr data-idx="${idx}">

@@ -124,3 +124,16 @@ section#details h2 { margin: 0 0 8px; font-size: 20px; }
   .sheet { width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; }
   .modal-body, .upload-body, .report-body { max-height: calc(100vh - 140px); }
 }
+
+
+/* V.1.0.04: robust modal visibility */
+.overlay.hidden { display: none !important; }
+.overlay.show { display: flex !important; }
+
+/* V.1.0.04: Print the report modal cleanly */
+@media print {
+  body * { visibility: hidden; }
+  #reportBackdrop.show, #reportBackdrop.show * { visibility: visible; }
+  #reportBackdrop.show { display: block !important; background: transparent !important; position: static !important; }
+  #reportModal { border: none !important; box-shadow: none !important; width: auto !important; height: auto !important; }
+}
