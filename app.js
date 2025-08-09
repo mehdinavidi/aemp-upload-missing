@@ -332,7 +332,7 @@ function openPackModal(setObj, lines) {
     el.addEventListener("click", () => openLightbox(el.getAttribute("data-zoom-src"), el.getAttribute("data-caption") || ""));
   });
 
-  modalBody.querySelectorAll("tr").forEach(tr => {
+  modalBody.querySelectorAll("tbody tr").forEach(tr => {
     const idx = parseInt(tr.dataset.idx,10);
     const req = lines[idx].qty_required;
     const input = tr.querySelector(".qtyInput");
@@ -364,7 +364,7 @@ savePack.onclick = () => {
   const u = getUser();
   if (!selectedSetId || !u) return;
   const lines = getSetLines(selectedSetId);
-  const rows = Array.from(modalBody.querySelectorAll("tr"));
+  const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
   const captured = rows.map((tr, idx) => {
     const req = lines[idx].qty_required;
     const qty_found = parseInt(tr.querySelector(".qtyInput").value || "0", 10);
