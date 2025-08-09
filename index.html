@@ -48,10 +48,33 @@
       <h2>Hauptmenü</h2>
       <div class="vstack">
         <button id="btnPackplatz" class="primary lg">Packplatz</button>
-        <button id="btnSteri" class="ghost lg" disabled>Steri-Freigabe (in Arbeit)</button>
+        <button id="btnSteri" class="primary lg">Steri-Freigabe</button>
+        <button id="btnOp" class="ghost lg" disabled>OP-Ausgabe (in Arbeit)</button>
       </div>
     </div>
   </main>
+
+
+<!-- Steri View -->
+<main id="steriView" class="view hidden">
+  <div class="card" style="max-width:840px">
+    <h2>Steri-Freigabe</h2>
+    <p class="subtle">Scanne eine oder mehrere Etiketten-Nummern (Enter trennt), prüfe die Liste und klicke auf <b>Freigeben</b>.</p>
+    <div class="vstack">
+      <input id="scanInput" class="search" placeholder="Etikett scannen … (Enter)">
+      <div id="scanList" class="tablewrap">
+        <table class="table">
+          <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th></th></tr></thead>
+          <tbody id="scanTbody"></tbody>
+        </table>
+      </div>
+      <div class="row" style="display:flex; gap:10px; justify-content:flex-end">
+        <button id="clearScans" class="ghost">Liste leeren</button>
+        <button id="steriRelease" class="primary">Freigeben</button>
+      </div>
+    </div>
+  </div>
+</main>
 
   <!-- Packplatz -->
   <main class="view grid">
@@ -129,6 +152,7 @@
   <script src="js/details.js"></script>
   <script src="js/pack.js"></script>
   <script src="js/report.js"></script>
+  <script src="js/steri.js"></script>
   <script src="js/init.js"></script>
 </body>
 </html>
