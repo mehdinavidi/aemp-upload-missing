@@ -1,4 +1,6 @@
 
+function generateLabel(setObj){ const d=new Date(); const y=d.getFullYear().toString().slice(2); const m=("0"+(d.getMonth()+1)).slice(-2); const day=("0"+d.getDate()).slice(-2); const rnd=Math.random().toString(36).slice(2,7).toUpperCase(); return `ETK-${setObj.code}-${y}${m}${day}-${rnd}`; }
+
 function openPackModalV2(setObj, lines){
   const u = getUser(); if(!u){ requireLogin(); return; }
   modalTitle.textContent = `Packvorgang – ${setObj.code} (User: ${u.username})`;
@@ -71,10 +73,40 @@ function closeModal(){ modalBackdrop.classList.remove("show"); modalBackdrop.cla
 modalClose.addEventListener("click", closeModal);
 cancelPack.addEventListener("click", closeModal);
 
+
 savePack.addEventListener("click", ()=>{
   if (!selectedSetId) return;
   const u = getUser(); if (!u){ requireLogin(); return; }
   const lines = getSetLines(selectedSetId);
+  const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
+  const captured = rows.map((tr, idx)=>{
+    const req = lines[idx].qty_required;
+    const qty_found = parseInt(tr.querySelector(".qtyInput").value||"0",10);
+    const missing = qty_found < req;
+    const reason = tr.querySelector(".reasonSel").value || null;
+    const note = tr.querySelector(".note").value || null;
+    return { instrument_id: lines[idx].instrument_id, instrument_name: lines[idx].instrument.name, qty_required:req, qty_found, missing, reason, note };
+  });
+  const hasMissing = captured.some(l=> (l.qty_required-l.qty_found)>0 || l.missing );
+  const sessions = loadSessions();
+  const prev = sessions[selectedSetId] || {};
+  const label = prev.label || generateLabel(getSetById(selectedSetId));
+  sessions[selectedSetId] = {
+    set_id: selectedSetId,
+    label,
+    started_by: prev.started_by || u.username,
+    started_at: prev.started_at || new Date().toISOString(),
+    closed_by: u.username,
+    closed_at: new Date().toISOString(),
+    released_at: prev.released_at || null,
+    steri_by: prev.steri_by || null,
+    status: hasMissing ? "closed_with_missing" : "closed_ok",
+    lines: captured
+  };
+  saveSessions(sessions);
+  closeModal(); renderSetList(searchEl.value); renderDetails();
+  alert("Packvorgang gespeichert. Etikett: " + label);
+});
   const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
   const captured = rows.map((tr, idx)=>{
     const req = lines[idx].qty_required;

@@ -62,7 +62,7 @@ function renderDetails(){
 
   detailsEl.innerHTML = `
     <h2>${s.code} – ${s.name}</h2>
-    <p class="subtle">${s.department} • Status: <span class="badge ${status.cls}">${status.label}</span></p>
+    <p class="subtle">${s.department} • Status: <span class="badge ${status.cls}">${status.label}</span> ${(loadSessions()[s.id]?.label) ? "• Etikett: <b>"+loadSessions()[s.id].label+"</b>" : ""}</p>
     <div class="vstack" style="flex-direction:row; align-items:center; gap:12px; margin:8px 0 14px 0;">
       ${ovSet ? `<img class="ithumb" src="${ovSet.thumb}" data-zoom-src="${ovSet.full}" data-caption="${s.code} – ${s.name}">` : '<span class="subtle">Kein Set-Bild</span>'}
       <button id="btnSetImgUpload" class="ghost">Bild hochladen/ändern</button>

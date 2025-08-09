@@ -103,13 +103,19 @@ function getSetLines(setId){
   return DATA.setInstruments.filter(si=>si.set_id===setId)
     .map(si=>({ ...si, instrument: DATA.instruments.find(i=>i.id===si.instrument_id) }));
 }
+
 function computeSetStatus(setId){
   const sess = loadSessions()[setId];
   if (!sess) return { label:"neu", cls:"" };
+  if (sess.released_at){
+    return { label:"Freigegeben", cls:"good" };
+  }
   if (sess.closed_at){
     const hasMissing = sess.lines.some(l => (l.qty_required - l.qty_found) > 0 || l.missing);
-    return { label: hasMissing ? "Abgeschlossen (Fehlteile)" : "Abgeschlossen", cls: hasMissing ? "bad" : "good" };
+    return { label: hasMissing ? "Gepackt (Fehlteile)" : "Gepackt (wartet Steri)", cls: hasMissing ? "bad" : "warn" };
   }
+  return { label:"in Arbeit", cls:"warn" };
+}
   return { label:"in Arbeit", cls:"warn" };
 }
 
