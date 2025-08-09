@@ -263,7 +263,10 @@ function renderDetails() {
 
     <div class="toolbar">
       <button id="startPack" class="primary">Packvorgang starten</button>
-      ${cur ? '<button id="reportBtn" class="report-link">Packreport anzeigen</button>' : ''}
+      ${cur ? '<button id="reportBtn" class="secondary">Packreport</button>' : ''}
+      ${cur ? '<button id="editPack" class="secondary">Bearbeiten</button>' : ''}
+      ${cur ? '<button id="releasePack" class="secondary">Freigeben</button>' : ''}
+      ${cur ? '<button id="cancelPackBtn" class="secondary">Stornieren</button>' : ''}
       ${cur && !cur.closed_at ? '<span class="badge warn">in Arbeit</span>' : ''}
     </div>
   `;
@@ -276,8 +279,10 @@ function renderDetails() {
   document.getElementById("btnAddSetImg").onclick = () => openUploadModal({ kind:"set", id: s.code, label: `${s.code} – ${s.name}` });
 
   document.getElementById("startPack").onclick = () => openPackModal(s, lines);
-  const rb = document.getElementById("reportBtn");
-  if (rb) rb.onclick = () => openReport(selectedSetId);
+  const rb = document.getElementById("reportBtn"); if (rb) rb.onclick = () => openReport(selectedSetId);
+  const eb = document.getElementById("editPack"); if (eb) eb.onclick = () => editExistingPack(selectedSetId);
+  const rel = document.getElementById("releasePack"); if (rel) rel.onclick = () => releaseCurrentPack(selectedSetId);
+  const cb = document.getElementById("cancelPackBtn"); if (cb) cb.onclick = () => cancelCurrentPack(selectedSetId);
 }
 
 // ----- Pack Modal -----
@@ -497,3 +502,187 @@ resetBtn.addEventListener("click", () => {
 
 // Init
 requireLogin();
+
+
+// --- Mobile drawer logic ---
+const drawer = document.getElementById("setList");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const toggleSidebarBtn = document.getElementById("toggleSidebar");
+
+function openDrawer() {
+  drawer.classList.add("open");
+  drawerBackdrop.classList.add("show");
+}
+function closeDrawer() {
+  drawer.classList.remove("open");
+  drawerBackdrop.classList.remove("show");
+}
+if (toggleSidebarBtn) toggleSidebarBtn.addEventListener("click", openDrawer);
+if (drawerBackdrop) drawerBackdrop.addEventListener("click", closeDrawer);
+
+// close drawer when a set is chosen (on small screens)
+function maybeCloseDrawerForMobile() {
+  if (window.matchMedia("(max-width: 900px)").matches) closeDrawer();
+}
+
+// hook into renderSetList to close drawer after selection
+const _origRenderSetList = renderSetList;
+renderSetList = function(filter="") {
+  _origRenderSetList(filter);
+  // rewire click handlers to also close drawer
+  document.querySelectorAll("#setList .item").forEach(el => {
+    el.addEventListener("click", () => { maybeCloseDrawerForMobile(); }, { once: true });
+  });
+};
+
+
+// ---- App State / Views ----
+const VIEW_MENU = "menu";
+const VIEW_WORK = "work";
+const VIEW_ARCH = "arch";
+const KEY_STATION = "aemp_demo_station_v1";
+const KEY_ARCHIVE = "aemp_demo_archive_v1";
+
+let currentView = VIEW_MENU;
+
+const appTitle = document.getElementById("appTitle");
+const backToMenuBtn = document.getElementById("backToMenu");
+const menuView = document.getElementById("menu");
+const detailsView = document.getElementById("details");
+const archiveView = document.getElementById("archiveView");
+const setListPane = document.getElementById("setList");
+const stationLabel = document.getElementById("stationLabel");
+const chooseStationBtn = document.getElementById("chooseStation");
+const stationPicker = document.getElementById("stationPicker");
+const goWorkspaceBtn = document.getElementById("goWorkspace");
+const viewArchiveBtn = document.getElementById("viewArchive");
+
+function getStation() { try { return localStorage.getItem(KEY_STATION) || null; } catch { return null; } }
+function setStation(s) { try { localStorage.setItem(KEY_STATION, s); } catch(e){} }
+
+function showView(v){
+  currentView = v;
+  menuView.classList.toggle("hidden", v!==VIEW_MENU);
+  detailsView.classList.toggle("hidden", v!==VIEW_WORK);
+  archiveView.classList.toggle("hidden", v!==VIEW_ARCH);
+  setListPane.classList.toggle("hidden", v!==VIEW_WORK);
+  document.getElementById("search").classList.toggle("hidden", v!==VIEW_WORK);
+  backToMenuBtn.classList.toggle("hidden", v===VIEW_MENU);
+  appTitle.textContent = v===VIEW_MENU ? "AEMP • Hauptmenü" : "AEMP Pack-Demo";
+}
+
+backToMenuBtn.addEventListener("click", ()=> showView(VIEW_MENU));
+
+// Station init
+function refreshStationUI(){
+  const s = getStation();
+  stationLabel.textContent = s || "– nicht gewählt –";
+  goWorkspaceBtn.disabled = !s;
+}
+chooseStationBtn.addEventListener("click", ()=> stationPicker.scrollIntoView({behavior:'smooth', block:'center'}));
+document.querySelectorAll(".station-btn").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    setStation(b.dataset.station);
+    refreshStationUI();
+  });
+});
+
+viewArchiveBtn.addEventListener("click", ()=> { renderArchive(); showView(VIEW_ARCH); });
+goWorkspaceBtn.addEventListener("click", ()=> { showView(VIEW_WORK); });
+
+// Archive helpers
+function loadArchive(){ try { return JSON.parse(localStorage.getItem(KEY_ARCHIVE) || "[]"); } catch { return []; } }
+function saveArchive(a){ try { localStorage.setItem(KEY_ARCHIVE, JSON.stringify(a)); } catch(e){} }
+
+function archiveSession(sess){
+  const a = loadArchive();
+  a.unshift(sess);
+  saveArchive(a);
+}
+
+function renderArchive(){
+  const a = loadArchive();
+  const el = document.getElementById("archiveList");
+  if(!a.length){ el.innerHTML = '<p class="muted">Noch keine freigegebenen Packvorgänge.</p>'; return; }
+  el.innerHTML = a.map(x=>{
+    const s = getSetById(x.set_id);
+    const when = new Date(x.closed_at || x.started_at).toLocaleString();
+    const status = x.status;
+    return `
+      <div class="archive-item">
+        <div class="title">${s? s.code+" – "+s.name : "Set #"+x.set_id}</div>
+        <div class="meta">Abgeschlossen: ${when} • Benutzer: ${x.closed_by || x.started_by || "-"}</div>
+        <div class="meta">Status: ${status}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+
+function editExistingPack(setId){
+  const sess = loadSessions()[setId];
+  if(!sess){ alert("Kein Packvorgang vorhanden."); return; }
+  const s = getSetById(setId);
+  const lines = getSetLines(setId);
+  openPackModal(s, lines);
+  // Prefill values
+  const rows = Array.from(modalBody.querySelectorAll("tbody tr"));
+  rows.forEach((tr, idx) => {
+    const line = sess.lines[idx];
+    if(!line) return;
+    tr.querySelector(".qtyInput").value = String(line.qty_found ?? line.qty_required);
+    tr.querySelector(".missingCb").checked = !!line.missing;
+    tr.querySelector(".reasonSel").value = line.reason || "";
+    tr.querySelector(".note").value = line.note || "";
+    // sync missing toggle
+    const req = lines[idx].qty_required;
+    const val = parseInt(tr.querySelector(".qtyInput").value||"0",10);
+    const missing = val < req;
+    tr.querySelector(".missingCb").checked = missing;
+    tr.querySelector(".reasonSel").disabled = !missing;
+  });
+}
+
+function releaseCurrentPack(setId){
+  const sessions = loadSessions();
+  const sess = sessions[setId];
+  if(!sess){ alert("Kein Packvorgang vorhanden."); return; }
+  if(!confirm("Diesen Packvorgang freigeben? Danach kann das Set erneut gepackt werden. (Vorgang wird ins Archiv verschoben)")) return;
+  sess.released_at = new Date().toISOString();
+  sess.released_by = (getUser()||{}).username || null;
+  sess.status = (sess.status||'closed_ok') + "_released";
+  archiveSession(sess);
+  delete sessions[setId]; // frei für neuen Packvorgang
+  saveSessions(sessions);
+  renderSetList(searchEl.value); renderDetails();
+  alert("Freigegeben. Das Set kann erneut gepackt werden.");
+}
+
+function cancelCurrentPack(setId){
+  const sessions = loadSessions();
+  const sess = sessions[setId];
+  if(!sess){ alert("Kein Packvorgang vorhanden."); return; }
+  if(!confirm("Diesen Packvorgang wirklich stornieren? (Wird nicht archiviert)")) return;
+  delete sessions[setId];
+  saveSessions(sessions);
+  renderSetList(searchEl.value); renderDetails();
+  alert("Packvorgang storniert.");
+}
+
+// --- Mobile drawer logic ---
+const drawer = document.getElementById("setList");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const toggleSidebarBtn = document.getElementById("toggleSidebar");
+
+function openDrawer() { drawer.classList.remove("hidden"); drawer.classList.add("open"); drawerBackdrop.classList.add("show"); }
+function closeDrawer() { drawer.classList.remove("open"); drawerBackdrop.classList.remove("show"); }
+if (toggleSidebarBtn) toggleSidebarBtn.addEventListener("click", openDrawer);
+if (drawerBackdrop) drawerBackdrop.addEventListener("click", closeDrawer);
+function maybeCloseDrawerForMobile() { if (window.matchMedia("(max-width: 900px)").matches) closeDrawer(); }
+const _origRenderSetList = renderSetList;
+renderSetList = function(filter="") {
+  _origRenderSetList(filter);
+  document.querySelectorAll("#setList .item").forEach(el => {
+    el.addEventListener("click", () => { maybeCloseDrawerForMobile(); }, { once: true });
+  });
+};
