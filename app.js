@@ -130,6 +130,12 @@ function showWorkspace(){
   searchEl.classList.remove("hidden");
   homeBtn.classList.remove("hidden");
   appTitle.textContent = "AEMP Pack-Demo";
+  // render sets and ensure a set is selected
+  renderSetList(searchEl.value || "");
+  if (!selectedSetId && DATA.sets && DATA.sets.length) {
+    selectedSetId = DATA.sets[0].id;
+  }
+  renderDetails();
 }
 
 // Auth
