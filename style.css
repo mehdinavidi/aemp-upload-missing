@@ -47,7 +47,10 @@ button {
 }
 button.primary { background: var(--primary); border-color: var(--primary-2); }
 button.secondary { background: var(--panel); }
-button:disabled { opacity: .6; cursor: not-allowed; }
+button.disabled { opacity: .5; cursor: not-allowed; background: var(--panel); }
+button.big { font-size: 16px; padding: 14px 18px; }
+.btn-small { font-size: 12px; padding: 6px 8px; border-radius: 8px; }
+
 .hidden { display: none !important; }
 
 main {
@@ -72,12 +75,7 @@ aside.drawer {
 
 .view { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-height: calc(100vh - 90px); }
 .menu-card { background: var(--panel); border: 1px solid var(--chip-border); border-radius: 12px; padding: 16px; max-width: 720px; margin: 16px auto; }
-.kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; align-items: center; margin: 12px 0; }
-.kv dt { color: var(--muted); font-size: 12px; }
-.kv dd { margin: 0; font-weight: 700; }
-.menu-actions { display:flex; gap:8px; flex-wrap: wrap; }
-.station-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 10px; margin-top: 10px; }
-.station-btn { padding: 14px; border-radius: 12px; border: 1px solid var(--chip-border); background: var(--panel-2); color: var(--text); }
+.menu-actions { display:flex; gap:8px; flex-wrap: wrap; justify-content: center; }
 
 section#details h2 { margin: 0 0 8px; font-size: 20px; }
 #details .subtle { color: var(--muted); margin: 0 0 16px; }
@@ -92,7 +90,7 @@ section#details h2 { margin: 0 0 8px; font-size: 20px; }
 .table .qty { text-align: right; }
 .table .ithumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid var(--chip-border); background: #0e1621; cursor: zoom-in; }
 
-.toolbar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.toolbar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
 .placeholder { text-align: center; margin-top: 15vh; color: var(--muted); }
 
 /* Overlay & Sheets (modals) */

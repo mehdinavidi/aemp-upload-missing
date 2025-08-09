@@ -15,7 +15,6 @@
     </div>
     <div class="actions">
       <button id="homeBtn" class="icon-btn hidden" title="Hauptmenü" aria-label="Hauptmenü">
-        <!-- simple home icon -->
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
         </svg>
@@ -36,22 +35,9 @@
     <section id="menu" class="view">
       <div class="menu-card">
         <h2>Hauptmenü</h2>
-        <div class="kv">
-          <dt>Packplatz</dt>
-          <dd><span id="stationLabel">– nicht gewählt –</span> <button id="chooseStation" class="secondary">ändern</button></dd>
-        </div>
         <div class="menu-actions">
-          <button id="goWorkspace" class="primary" disabled>Zum Arbeitsplatz</button>
-          <button id="viewArchive">Archiv / Freigaben</button>
-        </div>
-      </div>
-
-      <div id="stationPicker" class="menu-card">
-        <h3>Packplatz wählen</h3>
-        <div class="station-grid">
-          <button class="station-btn" data-station="Packplatz A">Packplatz A</button>
-          <button class="station-btn" data-station="Packplatz B">Packplatz B</button>
-          <button class="station-btn" data-station="Packplatz C">Packplatz C</button>
+          <button id="btnPackplatz" class="primary big">Packplatz</button>
+          <button id="btnSteri" class="disabled big" title="Demnächst">Steri‑Freigabe (in Arbeit)</button>
         </div>
       </div>
     </section>
@@ -109,22 +95,21 @@
     </div>
   </div>
 
-  <!-- Upload-on-missing Modal -->
+  <!-- Upload Modal (manual trigger) -->
   <div id="uploadBackdrop" class="hidden overlay">
     <div id="uploadModal" class="sheet">
       <header class="upload-header">
-        <h3 id="uploadTitle">Bild hinzufügen</h3>
+        <h3 id="uploadTitle">Bild hinzufügen/ändern</h3>
         <button id="uploadClose" aria-label="Schließen" class="icon-btn">×</button>
       </header>
       <div class="upload-body" id="uploadBody">
-        <p id="uploadQuestion">Für dieses Element ist kein Bild hinterlegt. Möchtest du eines hochladen?</p>
         <div class="upload-controls">
           <input id="uploadFile" type="file" accept="image/*" capture="environment" />
         </div>
       </div>
       <footer class="upload-footer sticky-footer">
-        <button id="uploadSkip">Ohne Bild fortfahren</button>
-        <button id="uploadSave" class="primary" disabled>Hochladen & Weiter</button>
+        <button id="uploadCancel">Abbrechen</button>
+        <button id="uploadSave" class="primary" disabled>Hochladen</button>
       </footer>
     </div>
   </div>
