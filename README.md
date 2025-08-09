@@ -1,5 +1,5 @@
 
-# AEMP Pack-Demo – Ein Packplatz, Hauptmenü & Bildverwaltung per Button
+# AEMP Pack-Demo – Ein Packplatz, Hauptmenü & Bildverwaltung per Button (V.1.0.02)
 
 **Login:** `ips-1` … `ips-5` • Passwort `bilder`
 
