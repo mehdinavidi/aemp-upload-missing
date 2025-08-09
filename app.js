@@ -114,7 +114,7 @@ function showMainMenu(){
   archiveView.classList.add("hidden");
   setListEl.classList.add("hidden");
   searchEl.classList.add("hidden");
-  homeBtn.classList.add("hidden");
+  homeBtn.classList.add("hidden"); userBox.classList.remove("hidden");
   appTitle.textContent = "AEMP • Hauptmenü";
 }
 function showWorkspace(){
@@ -123,7 +123,7 @@ function showWorkspace(){
   document.getElementById("details").classList.remove("hidden");
   setListEl.classList.remove("hidden");
   searchEl.classList.remove("hidden");
-  homeBtn.classList.remove("hidden");
+  homeBtn.classList.remove("hidden"); userBox.classList.remove("hidden");
   appTitle.textContent = "AEMP Pack-Demo";
 
   renderSetList(searchEl.value || "");
@@ -298,7 +298,7 @@ function renderDetails(){
   detailsEl.querySelectorAll("button[data-action='inst-upload']").forEach(b => b.addEventListener("click", ()=> openUpload({kind:'inst', id: parseInt(b.dataset.id,10)})));
   detailsEl.querySelectorAll("button[data-action='inst-delete']").forEach(b => b.addEventListener("click", ()=> { if (confirm("Instrument-Bild wirklich löschen?")) deleteImage({kind:'inst', id: parseInt(b.dataset.id,10)}); }));
   // Pack buttons
-  document.getElementById("startPack").onclick = () => openPackModal(s, lines);
+  const startBtn = document.getElementById("startPack"); if (startBtn){ startBtn.addEventListener("click", ()=>{ console.log("Start Pack clicked"); openPackModal(s, lines); }); }
   const rb = document.getElementById("reportBtn"); if (rb) rb.onclick = () => openReport(selectedSetId);
   const eb = document.getElementById("editPack"); if (eb) eb.onclick = () => editExistingPack(selectedSetId);
   const rel = document.getElementById("releasePack"); if (rel) rel.onclick = () => releaseCurrentPack(selectedSetId);
@@ -309,6 +309,7 @@ function renderDetails(){
 function openPackModal(setObj, lines){
   const u = getUser(); if (!u){ requireLogin(); return; }
   modalTitle.textContent = `Packvorgang – ${setObj.code} (User: ${u.username})`;
+  modalBackdrop.classList.remove('hidden');
   modalBackdrop.classList.remove("hidden"); modalBackdrop.classList.add("show");
   const rows = lines.map((l, idx)=>`
     <tr data-idx="${idx}">
