@@ -153,9 +153,9 @@ function openLightbox(src, caption = "") {
   if (!src) return;
   lbImg.src = src;
   lbCaption.textContent = caption;
-  lbBackdrop.classList.add("show");
+  lbBackdrop.classList.remove("hidden"); lbBackdrop.classList.add("show");
 }
-function closeLightbox() { lbBackdrop.classList.remove("show"); lbImg.src = ""; lbCaption.textContent = ""; }
+function closeLightbox() { lbBackdrop.classList.remove("show"); lbBackdrop.classList.add("hidden"); lbImg.src = ""; lbCaption.textContent = ""; }
 lbBackdrop.addEventListener("click", (e) => { if (e.target === lbBackdrop) closeLightbox(); });
 lbClose.addEventListener("click", closeLightbox);
 
@@ -421,10 +421,10 @@ function openReport(setId) {
       <tbody>${rows}</tbody>
     </table>
   `;
-  reportBackdrop.classList.add("show");
+  reportBackdrop.classList.remove("hidden"); reportBackdrop.classList.add("show");
 }
-reportClose.addEventListener("click", () => reportBackdrop.classList.remove("show"));
-reportBackdrop.addEventListener("click", (e) => { if (e.target === reportBackdrop) reportBackdrop.classList.remove("show"); });
+reportClose.addEventListener("click", () => { reportBackdrop.classList.remove("show"); reportBackdrop.classList.add("hidden"); });
+reportBackdrop.addEventListener("click", (e) => { if (e.target === reportBackdrop) { reportBackdrop.classList.remove("show"); reportBackdrop.classList.add("hidden"); } });
 reportPrint.addEventListener("click", () => window.print());
 
 // ----- Upload-on-missing flow -----
@@ -456,9 +456,9 @@ function openUploadModal(item) {
   document.getElementById("uploadQuestion").textContent = `Für "${item.label}" ist kein Bild hinterlegt. Möchtest du ein Bild hochladen?`;
   uploadFile.value = "";
   uploadSave.disabled = true;
-  uploadBackdrop.classList.add("show");
+  uploadBackdrop.classList.remove("hidden"); uploadBackdrop.classList.add("show");
 }
-function closeUploadModal() { uploadBackdrop.classList.remove("show"); currentUpload = null; }
+function closeUploadModal() { uploadBackdrop.classList.remove("show"); uploadBackdrop.classList.add("hidden"); currentUpload = null; }
 uploadClose.addEventListener("click", () => { closeUploadModal(); });
 uploadSkip.addEventListener("click", () => { nextUploadItem(); });
 uploadFile.addEventListener("change", () => { uploadSave.disabled = !uploadFile.files?.length; });
