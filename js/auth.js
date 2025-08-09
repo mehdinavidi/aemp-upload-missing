@@ -48,4 +48,4 @@ loginForm.addEventListener("submit", (e)=>{
 logoutBtn.addEventListener("click", (e)=>{ e.preventDefault(); logoutUser(); selectedSetId=null; requireLogin(); });
 homeBtn.addEventListener("click", showMainMenu);
 btnPackplatz.addEventListener("click", showWorkspace);
-btnSteri.addEventListener("click", ()=>{ showSteriView(); wireSteri(); });
+btnSteri.addEventListener("click", () => { showSteriView(); if (typeof window.wireSteri === 'function') window.wireSteri(); });
