@@ -138,6 +138,7 @@ function requireLogin(){
   if (!u){
     console.log("no user -> show login");
     loginOverlay.classList.remove("hidden");
+    loginOverlay.classList.add("show");
     userBox.classList.add("hidden");
     homeBtn.classList.add("hidden");
     menuView.classList.add("hidden");
@@ -146,6 +147,7 @@ function requireLogin(){
     searchEl.classList.add("hidden");
   } else {
     console.log("user present:", u.username);
+    loginOverlay.classList.remove("show");
     loginOverlay.classList.add("hidden");
     userBox.classList.remove("hidden"); userBox.style.display='flex';
     userNameEl.textContent = u.username;
@@ -162,7 +164,7 @@ loginForm.addEventListener("submit", (e)=>{
   setUser({ username });
   requireLogin();
 });
-logoutBtn.addEventListener("click", (e)=>{ e.preventDefault(); console.log('logout clicked'); logoutUser(); selectedSetId = null; requireLogin(); });
+logoutBtn.addEventListener("click", (e)=>{ e.preventDefault(); console.log('logout clicked'); logoutUser(); selectedSetId = null; requireLogin(); loginOverlay.classList.remove('hidden'); loginOverlay.classList.add('show'); });
 homeBtn.addEventListener("click", showMainMenu);
 
 // Lightbox
@@ -452,3 +454,15 @@ renderSetList = function(filter=""){
 requireLogin();
 
 
+
+
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape'){
+    if (!loginOverlay.classList.contains('show')) {
+      if (typeof closeModal === 'function') closeModal();
+      reportBackdrop.classList.remove('show'); reportBackdrop.classList.add('hidden');
+      uploadBackdrop.classList.remove('show'); uploadBackdrop.classList.add('hidden');
+      lbBackdrop.classList.remove('show'); lbBackdrop.classList.add('hidden');
+    }
+  }
+});
