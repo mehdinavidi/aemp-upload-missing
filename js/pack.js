@@ -102,9 +102,26 @@ savePack.addEventListener("click", ()=>{
 
 function editExistingPack(setId){ alert("Bearbeiten folgt später."); }
 function releaseCurrentPack(setId){ alert("Freigabe folgt später."); }
+
 function cancelCurrentPack(setId){
   const s = loadSessions();
-  if (!s[setId]){ alert("Kein Packvorgang vorhanden."); return; }
-  if (!confirm("Diesen Packvorgang wirklich stornieren?")) return;
-  delete s[setId]; saveSessions(s); renderSetList(searchEl.value); renderDetails(); alert("Storniert.");
+  const sess = s[setId];
+  if (!sess){ alert("Kein Packvorgang vorhanden."); return; }
+  // Pflichtfeld: Hinweis
+  let reason = "";
+  while (true){
+    reason = prompt("Bitte einen Hinweis zur Stornierung eingeben (Pflichtfeld):", "");
+    if (reason === null) { return; } // Abbruch
+    if ((reason||"").trim().length >= 3) break;
+    alert("Hinweis ist Pflicht (mind. 3 Zeichen).");
+  }
+  if (!confirm("Diesen Packvorgang wirklich stornieren?\nHinweis: " + reason.trim())) return;
+  // Optional: du kannst den Hinweis z.B. in der Console sehen oder später speichern
+  console.log("Packvorgang storniert. Hinweis:", reason.trim());
+  delete s[setId];
+  saveSessions(s);
+  renderSetList(searchEl.value);
+  renderDetails();
+  alert("Packvorgang storniert.");
 }
+
