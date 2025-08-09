@@ -1,5 +1,5 @@
 
-# AEMP Pack-Demo – Ein Packplatz, Hauptmenü & Bildverwaltung per Button (V.1.0.07)
+# AEMP Pack-Demo – Ein Packplatz, Hauptmenü & Bildverwaltung per Button (V.1.0.08)
 
 **Login:** `ips-1` … `ips-5` • Passwort `bilder`
 
@@ -39,3 +39,5 @@
 - Barcode-Scan & PWA-Offlinebetrieb.
 
 Viel Erfolg! Wenn irgendwo eine Kleinigkeit hakt, sag Bescheid – ich patch’ es fix.
+
+- V.1.0.08: Packdialog mit Soll/Ist + Status-Icons (✔ / ❗ / ✖) und Live-Zählern.
