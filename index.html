@@ -61,23 +61,36 @@
   </main>
 
   <!-- Steri View -->
-  <main id="steriView" class="view hidden">
-    <div class="card" style="max-width:840px">
-      <h2>Steri-Freigabe</h2>
-      <p class="subtle">Scanne mehrere Etiketten (Enter trennt) und gib sie frei.</p>
-      <div class="vstack">
-        <input id="scanInput" class="search" placeholder="Etikett scannen … (Enter)">
-        <table class="table">
-          <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th></th></tr></thead>
-          <tbody id="scanTbody"></tbody>
-        </table>
-        <div style="display:flex;gap:10px;justify-content:flex-end">
-          <button id="clearScans" class="ghost">Liste leeren</button>
-          <button id="steriRelease" class="primary">Freigeben</button>
-        </div>
-      </div>
+  
+<main id="steriView" class="view hidden">
+  <div class="card" style="max-width:980px">
+    <h2>Steri-Freigabe</h2>
+    <p class="subtle">
+      Scanne eine oder mehrere Etiketten (Enter trennt). Treffer werden in der Liste
+      markiert bzw. demarkiert. Du kannst auch manuell an-/abhaken.
+    </p>
+    <input id="scanInput" class="search" placeholder="Etikett scannen … (Enter)">
+    <table class="table" style="margin-top:12px">
+      <thead>
+        <tr>
+          <th style="width:48px;text-align:center">
+            <input id="selAll" type="checkbox" title="Alle auswählen">
+          </th>
+          <th>Etikett</th>
+          <th>Set</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="packedTbody"></tbody>
+    </table>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+      <button id="refreshPacked" class="ghost">Aktualisieren</button>
+      <button id="clearSelection" class="ghost">Auswahl löschen</button>
+      <button id="releaseSelected" class="primary">Auswahl freigeben</button>
     </div>
-  </main>
+  </div>
+</main>
+
 
   <!-- Drawer backdrop for mobile -->
   <div id="drawerBackdrop" class="backdrop"></div>
