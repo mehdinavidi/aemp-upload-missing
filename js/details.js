@@ -73,6 +73,7 @@ function renderDetails(){
       <tbody>${rows}</tbody>
     </table>
     <div class="modal-footer" style="justify-content:flex-start">
+      <button id="cancelBtn" class="ghost">Stornieren</button>
       <button id="startPack" class="primary">Packvorgang starten</button>
       <button id="reportBtn" class="ghost">Packreport</button>
     </div>`;
@@ -85,4 +86,8 @@ function renderDetails(){
 
   document.getElementById("startPack").addEventListener("click", ()=> openPackModalV2(s, lines));
   const rb=document.getElementById("reportBtn"); if (rb) rb.addEventListener("click", ()=> openReport(selectedSetId));
+  const sess = loadSessions()[selectedSetId];
+  const cb = document.getElementById("cancelBtn");
+  if (cb) cb.addEventListener("click", ()=> cancelCurrentPack(selectedSetId));
+
 }
