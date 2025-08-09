@@ -71,6 +71,19 @@ function renderDetails(){
       <thead><tr><th></th><th>Instrument</th><th class="qty">Soll</th><th>Kategorie</th><th>Bild</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
+
+<div class="details-footer">
+  <div class="left">
+    <button id="reportBtn" class="ghost">Packformular</button>
+  </div>
+  <div class="center">
+    <button id="cancelBtn" class="ghost">Stornieren</button>
+  </div>
+  <div class="right">
+    <button id="startPack" class="primary">Packen</button>
+  </div>
+</div>
+
     <div class="modal-footer" style="justify-content:flex-start">
       <button id="startPack" class="primary">Packvorgang starten</button>
       <button id="reportBtn" class="ghost">Packreport</button>
