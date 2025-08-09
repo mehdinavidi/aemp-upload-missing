@@ -1,14 +1,24 @@
 
-// steri.js – gepackte Etiketten listen, an-/abhaken und freigeben
+// steri.js – resilient version with selectable list + scan toggle
 (function () {
-  // öffentlich machen, damit auth.js sie aufrufen kann
+  let warned = false;
   window.wireSteri = function wireSteri() {
     const scanInput = document.getElementById("scanInput");
-    const tbody = document.getElementById("packedTbody");
+    const tbody = document.getElementById("packedTbody"); // new markup
     const selAll = document.getElementById("selAll");
     const btnRefresh = document.getElementById("refreshPacked");
     const btnClear = document.getElementById("clearSelection");
     const btnRelease = document.getElementById("releaseSelected");
+
+    // If the new markup isn't present, fail gracefully and hint
+    if (!tbody || !scanInput) {
+      if (!warned) {
+        console.warn("[Steri] Neuer Markup nicht gefunden. Bitte index.html aktualisieren (Steri-Block mit #packedTbody).");
+        alert("Steri-Ansicht ist veraltet. Bitte die neue index.html aus dem Update übernehmen.");
+        warned = true;
+      }
+      return;
+    }
 
     function getPackedSessions() {
       const sessions = loadSessions();
@@ -40,51 +50,44 @@
           <td>${r.code} – ${r.name}</td>
           <td><span class="badge warn">bereit</span></td>
         </tr>`).join("");
-      selAll.checked = false;
+      if (selAll) selAll.checked = false;
     }
 
-    // Initial laden
+    // Initial
     renderPacked();
 
-    // Alle auswählen
-    selAll.onchange = () => {
+    // Events
+    if (selAll) selAll.onchange = () => {
       tbody.querySelectorAll(".rowChk").forEach((cb) => (cb.checked = selAll.checked));
     };
-
-    // Auswahl löschen
-    btnClear.onclick = () => {
+    if (btnClear) btnClear.onclick = () => {
       tbody.querySelectorAll(".rowChk").forEach((cb) => (cb.checked = false));
-      selAll.checked = false;
+      if (selAll) selAll.checked = false;
     };
+    if (btnRefresh) btnRefresh.onclick = renderPacked;
 
-    // Aktualisieren
-    btnRefresh.onclick = () => renderPacked();
-
-    // Scanner/Enter: Tokens splitten und checkbox toggeln
     scanInput.onkeydown = (e) => {
       if (e.key !== "Enter") return;
       e.preventDefault();
       const raw = (scanInput.value || "").trim();
       if (!raw) return;
       const tokens = raw.split(/[\s,;]+/).filter(Boolean);
-
       tokens.forEach((label) => {
         const tr = tbody.querySelector(`tr[data-label="${CSS.escape(label)}"]`);
         if (tr) {
           const cb = tr.querySelector(".rowChk");
-          cb.checked = !cb.checked; // toggle
+          cb.checked = !cb.checked;
         } else {
           console.warn("Etikett nicht (gepackt) gefunden:", label);
         }
       });
       const all = tbody.querySelectorAll(".rowChk");
       const yes = tbody.querySelectorAll(".rowChk:checked");
-      selAll.checked = all.length && all.length === yes.length;
+      if (selAll) selAll.checked = all.length && all.length == yes.length;
       scanInput.value = "";
     };
 
-    // Freigeben markierter Zeilen
-    btnRelease.onclick = () => {
+    if (btnRelease) btnRelease.onclick = () => {
       const rows = Array.from(tbody.querySelectorAll("tr"));
       const marked = rows.filter((tr) => tr.querySelector(".rowChk")?.checked);
       if (!marked.length) {
