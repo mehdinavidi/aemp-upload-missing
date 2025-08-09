@@ -442,3 +442,57 @@ renderSetList = function(filter=""){
 
 // Init
 requireLogin();
+
+
+// --- V.1.0.05: ensure modal exists and can be shown ---
+function ensureModalExists(){
+  let mb = document.getElementById("modalBackdrop");
+  if (!mb){
+    const tpl = document.createElement('div');
+    tpl.innerHTML = `
+      <div id="modalBackdrop" class="overlay">
+        <div id="modal" class="sheet">
+          <div class="modal-header">
+            <h3 id="modalTitle">Packvorgang</h3>
+            <button id="modalClose" aria-label="Schließen" class="icon-btn">×</button>
+          </div>
+          <div class="modal-body" id="modalBody"></div>
+          <div class="modal-footer sticky-footer">
+            <button id="cancelPack">Abbrechen</button>
+            <button id="savePack" class="primary">Speichern & Abschließen</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(tpl.firstElementChild);
+    // rebind refs
+    window.modalBackdrop = document.getElementById("modalBackdrop");
+    window.modalBody = document.getElementById("modalBody");
+    window.modalTitle = document.getElementById("modalTitle");
+    window.modalClose = document.getElementById("modalClose");
+    window.cancelPack = document.getElementById("cancelPack");
+    window.savePack = document.getElementById("savePack");
+    // close wiring
+    modalClose.onclick = closeModal;
+    cancelPack.onclick = closeModal;
+  }
+}
+
+const _origOpenPackModal = openPackModal;
+openPackModal = function(setObj, lines){
+  ensureModalExists();
+  try {
+    _origOpenPackModal(setObj, lines);
+    // force visible
+    modalBackdrop.classList.remove('hidden');
+    modalBackdrop.classList.add('show');
+    Object.assign(modalBackdrop.style, {display:'flex', position:'fixed', inset:'0', zIndex:'9999'});
+    // sanity check
+    const visible = window.getComputedStyle(modalBackdrop).display !== 'none' && modalBackdrop.classList.contains('show');
+    if (!visible){
+      alert("Hinweis: Der Packdialog konnte nicht sichtbar gemacht werden. Bitte neu laden (Strg+Shift+R).");
+    }
+  } catch (e){
+    console.error("Fehler beim Öffnen des Packdialogs:", e);
+    alert("Unerwarteter Fehler beim Öffnen des Packdialogs. Details in der Konsole.");
+  }
+};
