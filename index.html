@@ -15,11 +15,11 @@
       <h1 id="appTitle">AEMP Pack-Demo</h1>
     </div>
     <div class="right">
-      <input id="search" class="search" placeholder="Sets suchen…" />
+      <input id="search" class="search" placeholder="Sets suchen…">
       <button id="resetData" class="ghost">Testdaten zurücksetzen</button>
       <div id="userBox" class="userbox hidden">
         <span id="userName">-</span>
-        <button id="logoutBtn" class="icon-btn" title="Abmelden" aria-label="Abmelden">⇦</button>
+        <button id="logoutBtn" class="icon-btn" title="Abmelden">⇦</button>
       </div>
     </div>
   </header>
@@ -54,32 +54,29 @@
     </div>
   </main>
 
-
-<!-- Steri View -->
-<main id="steriView" class="view hidden">
-  <div class="card" style="max-width:840px">
-    <h2>Steri-Freigabe</h2>
-    <p class="subtle">Scanne eine oder mehrere Etiketten-Nummern (Enter trennt), prüfe die Liste und klicke auf <b>Freigeben</b>.</p>
-    <div class="vstack">
-      <input id="scanInput" class="search" placeholder="Etikett scannen … (Enter)">
-      <div id="scanList" class="tablewrap">
-        <table class="table">
-          <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th></th></tr></thead>
-          <tbody id="scanTbody"></tbody>
-        </table>
-      </div>
-      <div class="row" style="display:flex; gap:10px; justify-content:flex-end">
-        <button id="clearScans" class="ghost">Liste leeren</button>
-        <button id="steriRelease" class="primary">Freigeben</button>
-      </div>
-    </div>
-  </div>
-</main>
-
   <!-- Packplatz -->
   <main class="view grid">
     <aside id="setList" class="sidebar"></aside>
     <section id="details" class="details"></section>
+  </main>
+
+  <!-- Steri View -->
+  <main id="steriView" class="view hidden">
+    <div class="card" style="max-width:840px">
+      <h2>Steri-Freigabe</h2>
+      <p class="subtle">Scanne mehrere Etiketten (Enter trennt) und gib sie frei.</p>
+      <div class="vstack">
+        <input id="scanInput" class="search" placeholder="Etikett scannen … (Enter)">
+        <table class="table">
+          <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th></th></tr></thead>
+          <tbody id="scanTbody"></tbody>
+        </table>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button id="clearScans" class="ghost">Liste leeren</button>
+          <button id="steriRelease" class="primary">Freigeben</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Drawer backdrop for mobile -->
@@ -120,7 +117,7 @@
       </div>
       <div id="modalBody" class="modal-body"></div>
       <div class="modal-footer sticky-footer">
-        <button id="cancelPack">Abbrechen</button>
+        <button id="cancelPack" class="ghost">Abbrechen</button>
         <button id="savePack" class="primary">Speichern & Abschließen</button>
       </div>
     </div>
@@ -141,10 +138,7 @@
   </div>
 
   <!-- GitHub upload endpoint (configure) -->
-  <script>
-    // Set this to your deployed serverless URL, e.g. "https://aemp-upload-proxy.vercel.app/api"
-    window.UPLOAD_ENDPOINT = "";
-  </script>
+  <script>window.UPLOAD_ENDPOINT="";</script>
   <script src="js/github.js"></script>
   <script src="js/core.js"></script>
   <script src="js/auth.js"></script>
