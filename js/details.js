@@ -73,9 +73,13 @@ function renderDetails(){
     </table>
 
 <div class="details-footer">
-  <div class="left">
+  <div class="footer-bar">
     <button id="reportBtn" class="ghost">Packformular</button>
+    <button id="cancelBtn" class="ghost">Stornieren</button>
+    <button id="startPack" class="primary">Packen</button>
   </div>
+</div>
+
   <div class="center">
     <button id="cancelBtn" class="ghost">Stornieren</button>
   </div>
@@ -84,11 +88,7 @@ function renderDetails(){
   </div>
 </div>
 
-    <div class="modal-footer" style="justify-content:flex-start">
-      <button id="startPack" class="primary">Packvorgang starten</button>
-      <button id="reportBtn" class="ghost">Packreport</button>
-      <button id="cancelBtn" class="ghost">Stornieren</button>
-    </div>`;
+    `;
 
   detailsEl.querySelectorAll("[data-zoom-src]").forEach(el=> el.addEventListener("click", ()=> openLightbox(el.getAttribute("data-zoom-src"), el.getAttribute("data-caption")||"")));
   document.getElementById("btnSetImgUpload").onclick = ()=> openUpload({kind:'set', id:s.code});
