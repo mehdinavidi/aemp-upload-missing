@@ -62,19 +62,20 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe
 
 
 /* Feste Aktionsleiste unten in der rechten Detail-Spalte */
+
 .details-footer{
   position: sticky;
   bottom: 0;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  justify-content:space-between;
-  padding:12px 16px;
+  padding:10px 12px;
   background:var(--panel);
   border-top:1px solid #1b2735;
   z-index:5;
-  margin-top:12px;
 }
+
 .details-footer .left{display:flex;gap:10px;align-items:center}
 .details-footer .center{display:flex;gap:10px;align-items:center;justify-content:center;flex:1}
 .details-footer .right{display:flex;gap:10px;align-items:center}
+
+
+.footer-bar{display:flex;gap:8px;align-items:center;justify-content:center}
+.details{padding-bottom:72px} /* Platz für Footer */
