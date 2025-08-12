@@ -15,3 +15,5 @@ document.addEventListener("keydown",(e)=>{
 });
 
 requireLogin();
+
+const uploadHint = document.getElementById('uploadHint'); if (uploadHint) uploadHint.style.display = (window.UPLOAD_ENDPOINT?'none':'inline');

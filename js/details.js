@@ -20,7 +20,22 @@ function normalizeImgStore(){
 
 function openUpload(target){ currentUploadTarget=target; uploadFile.value=""; uploadSave.disabled=true; uploadBackdrop.classList.add("show"); }
 function closeUpload(){ uploadBackdrop.classList.remove("show"); }
+
 function fileToDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+async function downscaleDataURL(dataUrl, maxSize=1200, quality=0.8){
+  return new Promise((resolve)=>{
+    const img=new Image(); img.onload=()=>{
+      let {width:w,height:h}=img;
+      const scale=Math.min(1, maxSize/Math.max(w,h));
+      const cw=Math.round(w*scale), ch=Math.round(h*scale);
+      const c=document.createElement('canvas'); c.width=cw; c.height=ch;
+      const ctx=c.getContext('2d'); ctx.drawImage(img,0,0,cw,ch);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.src=dataUrl;
+  });
+}
+
 uploadClose.addEventListener("click", closeUpload);
 uploadCancel.addEventListener("click", closeUpload);
 uploadFile.addEventListener("change", ()=> uploadSave.disabled = !uploadFile.files?.length );
@@ -34,7 +49,7 @@ uploadSave.addEventListener("click", async ()=>{
     if (window.UPLOAD_ENDPOINT && window.GithubUpload){
       try{ const r=await GithubUpload.upload(currentUploadTarget.kind, currentUploadTarget.id, file); full=r.url; thumb=r.url; ghPath=r.path; ghSha=r.sha||null; }
       catch(e){ const d=await fileToDataURL(file); full=thumb=d; }
-    } else { const d=await fileToDataURL(file); full=thumb=d; }
+    } else { const d=await fileToDataURL(file); const ds=await downscaleDataURL(d, 1200, 0.8); const th=await downscaleDataURL(d, 220, 0.8); full=ds; thumb=th; }
     if(currentUploadTarget.kind==='set'){ ov.sets[currentUploadTarget.id] = ov.sets[currentUploadTarget.id]||[]; ov.sets[currentUploadTarget.id].push({thumb,full,ghPath,ghSha}); }
     else { ov.inst[currentUploadTarget.id] = ov.inst[currentUploadTarget.id]||[]; ov.inst[currentUploadTarget.id].push({thumb,full,ghPath,ghSha}); }
   }
