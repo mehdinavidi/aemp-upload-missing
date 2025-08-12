@@ -1,7 +1,8 @@
 const searchEl = document.getElementById('search');
+const resetBtn = document.getElementById('resetData');
 
 searchEl.addEventListener("input", ()=> renderSetList(searchEl ? searchEl.value : ""));
-resetBtn.addEventListener("click", ()=>{
+resetBtn && resetBtn.addEventListener("click", ()=>{
   if (confirm("Lokale Packdaten & Login zurücksetzen? (Bilder bleiben erhalten)")){ resetSessions(); selectedSetId=null; requireLogin(); }
 });
 

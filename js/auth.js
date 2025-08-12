@@ -1,6 +1,6 @@
 // Demo-User (ips-1 .. ips-5 / pass: 'bilder')
-const USERS = ['ips-1','ips-2','ips-3','ips-4','ips-5'].map(u=>({username:u,password:'bilder'}));
-
+const PASS = 'bilder';
+const USERS = new Set(['ips-1','ips-2','ips-3','ips-4','ips-5']);
 
 function showMainMenu(){
   menuView.classList.remove("hidden");
@@ -45,7 +45,7 @@ loginForm.addEventListener("submit", (e)=>{
   e.preventDefault();
   const username = (loginUser.value||"").trim().toLowerCase();
   const pass = loginPass.value||"";
-  if (!USERS.has(username) || pass!==PASS){ alert("Ungültige Zugangsdaten. Demo: ips-1…ips-5 / bilder"); return; }
+  if (!USERS.has(username) || pass!==PASS) { alert('Ungültige Zugangsdaten. Demo: ips-1…ips-5 / bilder'); return; }
   setUser({ username }); requireLogin();
 });
 logoutBtn.addEventListener("click", (e)=>{ e.preventDefault(); logoutUser(); selectedSetId=null; requireLogin(); });
