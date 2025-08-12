@@ -37,6 +37,26 @@ function deleteImage(target){
   renderSetList(searchEl.value); renderDetails();
 }
 
+
+// Feste Aktionsleiste unten rechts erzeugen/aktualisieren
+(function ensureFab(){
+  let fab = document.getElementById("fabActions");
+  if (!fab){
+    fab = document.createElement("div");
+    fab.id = "fabActions";
+    fab.className = "fab-fixed";
+    fab.innerHTML =
+      '<button id="reportBtn" class="ghost">Packformular</button>' +
+      '<button id="cancelBtn" class="danger">Stornieren</button>' +
+      '<button id="startPack" class="primary">Packen</button>';
+    document.body.appendChild(fab);
+  } else {
+    fab.querySelector("#reportBtn").textContent = "Packformular";
+    fab.querySelector("#cancelBtn").textContent = "Stornieren";
+    fab.querySelector("#startPack").textContent = "Packen";
+  }
+})();
+
 function renderDetails(){
   if (!selectedSetId){ detailsEl.innerHTML='<div class="placeholder"><h2>Wähle links ein Set aus</h2><p>Dann siehst du hier die Details und kannst den Packvorgang starten.</p></div>'; return; }
   const s=getSetById(selectedSetId);
@@ -72,12 +92,7 @@ function renderDetails(){
       <tbody>${rows}</tbody>
     </table>
 
-<div class="details-footer">
-  <div class="footer-bar">
-    <button id="reportBtn" class="ghost">Packformular</button>
-    <button id="cancelBtn" class="ghost">Stornieren</button>
-    <button id="startPack" class="primary">Packen</button>
-  </div>
+
 </div>
 
   <div class="center">
@@ -95,7 +110,28 @@ function renderDetails(){
   document.getElementById("btnSetImgDelete").onclick = ()=> { if (confirm("Set-Bild löschen?")) deleteImage({kind:'set', id:s.code}); };
   detailsEl.querySelectorAll("button[data-action='inst-upload']").forEach(b=> b.addEventListener("click", ()=> openUpload({kind:'inst', id:parseInt(b.dataset.id,10)})));
   detailsEl.querySelectorAll("button[data-action='inst-delete']").forEach(b=> b.addEventListener("click", ()=> { if (confirm("Instrument-Bild löschen?")) deleteImage({kind:'inst', id:parseInt(b.dataset.id,10)}); }));
-  document.getElementById("startPack").addEventListener("click", ()=> openPackModalV2(s, lines));
+  
+
+// "__FAB_INJECT__" Fixed bottom-right action bar
+(function ensureFab(){
+  let fab = document.getElementById("fabActions");
+  if (!fab){
+    fab = document.createElement("div");
+    fab.id = "fabActions";
+    fab.className = "fab-fixed";
+    fab.innerHTML = '<button id="reportBtn" class="ghost">Packformular</button>' +
+                    '<button id="cancelBtn" class="danger">Stornieren</button>' +
+                    '<button id="startPack" class="primary">Packen</button>';
+    document.body.appendChild(fab);
+  } else {
+    const r=fab.querySelector("#reportBtn"); if(r) r.textContent="Packformular";
+    const c=fab.querySelector("#cancelBtn"); if(c) c.textContent="Stornieren";
+    const s=fab.querySelector("#startPack"); if(s) s.textContent="Packen";
+  }
+})();
+/*__FAB_INJECT__*/
+
+      document.getElementById("startPack").addEventListener("click", ()=> openPackModalV2(s, lines));
   const rb=document.getElementById("reportBtn"); if (rb) rb.addEventListener("click", ()=> openReport(selectedSetId));
   const cb=document.getElementById("cancelBtn"); if (cb) cb.addEventListener("click", ()=> cancelCurrentPack(selectedSetId));
 }
