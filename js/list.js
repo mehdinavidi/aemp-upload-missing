@@ -1,19 +1,31 @@
 
-function renderSetList(filter=""){
-  const q=(filter||"").toLowerCase();
-  setListEl.innerHTML="";
-  const res = DATA.sets.filter(s=> s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
-  if(!res.length){ setListEl.innerHTML='<div class="placeholder">Keine Sets gefunden.</div>'; return; }
-  res.forEach(s=>{
-    const status = computeSetStatus(s.id);
-    let ov = loadImgOverrides().sets[s.code]; ov = (ov && Array.isArray(ov) ? ov[0] : ov);
-    const item = document.createElement("div");
-    item.className="item"+(s.id===selectedSetId?" active":"");
-    item.innerHTML = `
-      <img class="thumb" src="${ov?ov.thumb:""}" alt="${s.code} Bild">
-      <div><div class="title">${s.code} – ${s.name}</div><div class="subtle">${s.department}</div></div>
-      <div><span class="badge ${status.cls}">${status.label}</span></div>`;
-    item.addEventListener("click", ()=>{ selectedSetId=s.id; renderSetList(q); renderDetails(); });
-    setListEl.appendChild(item);
-  });
-}
+// js/list.js – robust list rendering
+(function(){
+  function el(){ return document.getElementById('setList'); }
+  function q(value=''){ return (value||'').toLowerCase().trim(); }
+
+  window.renderSetList = function(term){
+    const setListEl = el();
+    if (!setListEl){ console.warn('setListEl missing – skipping renderSetList'); return; }
+    const s = q(term);
+    const sets = (window.DATA?.sets||[]).filter(x=>!s || x.name.toLowerCase().includes(s) || x.code.toLowerCase().includes(s));
+    setListEl.innerHTML = sets.map(set=>`
+      <div class="card set-item" data-id="${set.id}">
+        <div class="hstack" style="gap:10px; align-items:center">
+          <img src="${set.image_url||''}" class="set-thumb" alt="">
+          <div class="grow">
+            <div class="title">${set.code} – ${set.name}</div>
+            <div class="subtle">${set.department||''}</div>
+          </div>
+          <span class="chip chip-ok">${set.status||'Freigegeben'}</span>
+        </div>
+      </div>`).join('') || '<div class="placeholder">Keine Sets</div>';
+
+    setListEl.querySelectorAll('.set-item').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        window.selectedSetId = parseInt(card.getAttribute('data-id'),10);
+        if (typeof window.renderDetails==='function') window.renderDetails();
+      });
+    });
+  };
+})();
