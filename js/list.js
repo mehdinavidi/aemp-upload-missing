@@ -6,7 +6,7 @@ function renderSetList(filter=""){
   if(!res.length){ setListEl.innerHTML='<div class="placeholder">Keine Sets gefunden.</div>'; return; }
   res.forEach(s=>{
     const status = computeSetStatus(s.id);
-    const ov = loadImgOverrides().sets[s.code];
+    let ov = loadImgOverrides().sets[s.code]; ov = (ov && Array.isArray(ov) ? ov[0] : ov);
     const item = document.createElement("div");
     item.className="item"+(s.id===selectedSetId?" active":"");
     item.innerHTML = `
