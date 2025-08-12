@@ -1,4 +1,3 @@
-
 (function(w){
   const GithubUpload = {
     base: w.UPLOAD_ENDPOINT || null,
