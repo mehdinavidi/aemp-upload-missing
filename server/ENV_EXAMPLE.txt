@@ -1,4 +1,5 @@
-GITHUB_TOKEN=ghp_xxx
-GITHUB_OWNER=dein-user
+# Vercel → Settings → Environment Variables
+GITHUB_TOKEN=ghp_xxx_with_repo_scope
+GITHUB_OWNER=dein-github-user-oder-org
 GITHUB_REPO=aemp-uploads
 GITHUB_BRANCH=main
