@@ -38,8 +38,16 @@ const MISSING_REASONS = ["Reparatur","Verlust","in Steri","Sonstiges"];
 const KEY_SESSIONS="aemp_sessions_v1"; const KEY_USER="aemp_user_v1";
 const KEY_IMG_SETS="aemp_img_sets_v1"; const KEY_IMG_INST="aemp_img_inst_v1";
 
-function loadJSON(k, f){ try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch{return f} }
-function saveJSON(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ console.warn('localStorage save failed for',k,e); notify('Speichern im Browser fehlgeschlagen (Speicher voll). Bitte Server-Upload aktivieren.'); return false; } }catch(e){} }
+function loadJSON(k, fallback){
+  try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(fallback)); }
+  catch(e){ return fallback; }
+}
+catch{return f} }
+function saveJSON(k, v){
+  try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+  catch(e){ console.warn('localStorage save failed for', k, e); if (typeof notify==='function') notify('Speichern im Browser fehlgeschlagen (Speicher voll). Bitte Server-Upload aktivieren.'); return false; }
+}
+catch(e){ console.warn('localStorage save failed for',k,e); notify('Speichern im Browser fehlgeschlagen (Speicher voll). Bitte Server-Upload aktivieren.'); return false; } }catch(e){} }
 function getUser(){ return loadJSON(KEY_USER, null); }
 function setUser(u){ saveJSON(KEY_USER, u); }
 function logoutUser(){ localStorage.removeItem(KEY_USER); }
