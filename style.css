@@ -112,3 +112,10 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe
 }
 
 .details { padding-bottom: 16px; }
+
+
+/* Gallery for multiple images */
+.gallery{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gallery .gitem{position:relative}
+.gallery img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--chip-border);background:#0b1622;cursor:pointer}
+.gallery .del{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:1px solid var(--chip-border);background:#1a2533;color:#fff;cursor:pointer;line-height:20px;text-align:center}

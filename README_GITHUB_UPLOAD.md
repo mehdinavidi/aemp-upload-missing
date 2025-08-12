@@ -34,3 +34,10 @@ Der bestehende Upload-Handler nutzt automatisch den Server, wenn `UPLOAD_ENDPOIN
 
 ## Hinweis
 - Für Produktion kannst du im Server eine **Whitelist** für `kind` (`set|inst`) erzwingen oder eine einfache Auth ergänzen (optional).
+
+
+## Mehrere Bilder pro Set/Instrument (V.1.0.21)
+- Frontend speichert pro Set/Instrument jetzt **eine Galerie (Array)**.
+- Upload-Dialog erlaubt **Mehrfachauswahl**.
+- Galerie je Set/Instrument mit **Miniaturbildern**, **Löschen** (einzeln) und **Lightbox**.
+- **Serverpfad** trennt automatisch: `images/{kind}/{id}/...` (legt Ordner je Set/Instrument an).
