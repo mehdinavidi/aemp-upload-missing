@@ -1,3 +1,6 @@
+// Demo-User (ips-1 .. ips-5 / pass: 'bilder')
+const USERS = ['ips-1','ips-2','ips-3','ips-4','ips-5'].map(u=>({username:u,password:'bilder'}));
+
 
 function showMainMenu(){
   menuView.classList.remove("hidden");
@@ -13,7 +16,7 @@ function showWorkspace(){
   appTitle.textContent = "AEMP Pack-Demo";
   homeBtn.classList.remove("hidden");
   if (!selectedSetId && DATA.sets.length) selectedSetId = DATA.sets[0].id;
-  renderSetList(searchEl.value || ""); renderDetails();
+  renderSetList((window.searchEl ? searchEl.value : "") || ""); window.renderDetails();
 }
 function showSteriView(){
   menuView.classList.add("hidden");
