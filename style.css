@@ -79,3 +79,36 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe
 
 .footer-bar{display:flex;gap:8px;align-items:center;justify-content:center}
 .details{padding-bottom:72px} /* Platz für Footer */
+
+
+.danger {
+  background: var(--bad);
+  border: none;
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.danger:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+
+/* Feste Aktionsleiste unten rechts */
+.fab-fixed {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 1000;
+  background: rgba(12,18,25,.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid #1b2735;
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.details { padding-bottom: 16px; }
