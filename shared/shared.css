@@ -32,3 +32,14 @@ aside#setList{background:var(--panel);border:1px solid var(--border);border-radi
 .fab-fixed.hidden{display:none}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:50}
 .lightbox-inner{background:#12161c;padding:12px;border-radius:10px;display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* --- tiles / dashboard --- */
+.grid-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:16px}
+.tile{background:#141a24;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:200px;position:relative}
+.tile .tile-body{flex:1;display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:1.1rem;opacity:.9}
+.tile .tile-footer{padding:10px 12px;border-top:1px solid var(--border);font-weight:600}
+.tile.disabled{filter:grayscale(1);opacity:.5}
+.tile.disabled .tile-body{opacity:.6}
+.tile.disabled .tile-footer{opacity:.8}
+.tile.disabled a{pointer-events:none}
+.badge-soon{position:absolute;top:10px;right:10px;background:#2b3242;color:#bac4d3;padding:4px 8px;border-radius:16px;font-size:.8rem}
