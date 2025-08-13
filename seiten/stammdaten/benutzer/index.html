@@ -32,14 +32,14 @@
 
 <div id="dlg" class="lightbox" hidden>
   <div class="lightbox-inner" style="min-width:420px">
-    <h3 id="dlgTitle">Benutzer</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%"><h3 id="dlgTitle">Benutzer</h3><button id="dlgCloseX" type="button" class="btn ghost">×</button></div>
     <input id="fShort" class="btn ghost" placeholder="Kürzel (z. B. IPS1)" style="width:100%">
     <input id="fName" class="btn ghost" placeholder="Bezeichnung / Name" style="width:100%">
     <input id="fUser" class="btn ghost" placeholder="Login (z. B. ips-6)" style="width:100%">
     <input id="fRole" class="btn ghost" placeholder="Rolle (z. B. Administrator)" style="width:100%">
     <div class="hstack" style="gap:8px">
-      <button id="dlgCancel" class="btn ghost">Abbrechen</button>
-      <button id="dlgSave" class="btn primary">Speichern</button>
+      <button id="dlgCancel" type="button" class="btn ghost">Abbrechen</button>
+      <button id="dlgSave" type="button" class="btn primary">Speichern</button>
     </div>
   </div>
 </div>
