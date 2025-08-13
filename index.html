@@ -136,9 +136,13 @@
 </section>
 
 <script src="/aemp-upload-missing/shared/core.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/users.js?v=1.1.7"></script>
+<script src="/aemp-upload-missing/shared/admin.js?v=1.1.8"></script>
 <script src="/aemp-upload-missing/shared/menu_order.js?v=1.1.6"></script>
 <script>
   AEMP.session.requireLogin();
   AEMP_MENU.enable('.grid-tiles');
+  AEMP_ADMIN.applyState(document.querySelector('.grid-tiles'), AEMP_ADMIN.read());
+  AEMP_ADMIN.buildAdminPanel(document.querySelector('.grid-tiles'), AEMP_ADMIN.read());
 </script>
 </body></html>
