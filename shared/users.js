@@ -1,0 +1,19 @@
+(function(){
+  const KEY='aemp_users_v1';
+  const defaults=[
+    {id:1, username:'ips-1', short:'IPS1', name:'ips-1', role:'Administrator', active:true},
+    {id:2, username:'ips-2', short:'IPS2', name:'ips-2', role:'Anforderung', active:true},
+    {id:3, username:'ips-3', short:'IPS3', name:'ips-3', role:'Ausgabe', active:true},
+    {id:4, username:'ips-4', short:'IPS4', name:'ips-4', role:'OP', active:true},
+    {id:5, username:'ips-5', short:'IPS5', name:'ips-5', role:'Packplatz', active:true}
+  ];
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null') || defaults.slice(); } catch(e){ return defaults.slice(); } }
+  function save(list){ try{ localStorage.setItem(KEY, JSON.stringify(list)); }catch(e){} }
+  function nextId(list){ return list.reduce((m,x)=>Math.max(m,x.id||0),0)+1; }
+  function list(){ return load(); }
+  function create(user){ const list=load(); user.id=nextId(list); list.push(user); save(list); return user; }
+  function update(id,patch){ const list=load(); const i=list.findIndex(x=>x.id==id); if(i>=0){ list[i]=Object.assign({}, list[i], patch); save(list); return list[i]; } return null; }
+  function remove(id){ const list=load().filter(x=>x.id!=id); save(list); }
+  function toggle(id){ const list=load(); const u=list.find(x=>x.id==id); if(u){ u.active=!u.active; save(list);} }
+  window.AEMP_USERS = { list, create, update, remove, toggle };
+})();

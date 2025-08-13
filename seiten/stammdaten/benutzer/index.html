@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stammdaten • Benutzer</title>
+<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.7">
+</head><body>
+<header class="appbar">
+  <a class="home" href="/aemp-upload-missing/seiten/stammdaten/index.html">Stammdaten</a>
+  <div class="title">Benutzerverwaltung</div>
+</header>
+
+<div style="padding:12px">
+  <div class="hstack" style="gap:8px;align-items:center;margin-bottom:8px">
+    <input id="filter" class="btn ghost" placeholder="Suche (Name, Kürzel, Rolle)" style="min-width:320px">
+    <button id="btnNew" class="btn primary">+ Neu</button>
+    <button id="btnExport" class="btn ghost">Exportieren (JSON)</button>
+  </div>
+  <div class="card">
+    <table class="table" id="tbl">
+      <thead>
+        <tr>
+          <th style="width:64px">Aktiv</th>
+          <th style="width:100px">Kürzel</th>
+          <th>Bezeichnung</th>
+          <th style="width:200px">Rolle</th>
+          <th style="width:120px">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="dlg" class="lightbox" hidden>
+  <div class="lightbox-inner" style="min-width:420px">
+    <h3 id="dlgTitle">Benutzer</h3>
+    <input id="fShort" class="btn ghost" placeholder="Kürzel (z. B. IPS1)" style="width:100%">
+    <input id="fName" class="btn ghost" placeholder="Bezeichnung / Name" style="width:100%">
+    <input id="fUser" class="btn ghost" placeholder="Login (z. B. ips-6)" style="width:100%">
+    <input id="fRole" class="btn ghost" placeholder="Rolle (z. B. Administrator)" style="width:100%">
+    <div class="hstack" style="gap:8px">
+      <button id="dlgCancel" class="btn ghost">Abbrechen</button>
+      <button id="dlgSave" class="btn primary">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script src="/aemp-upload-missing/shared/core.js?v=1.1.7"></script>
+<script src="/aemp-upload-missing/shared/users.js?v=1.1.7"></script>
+<script>
+AEMP.session.requireLogin();
+const $=(s)=>document.querySelector(s);
+const T=$('#tbl tbody');
+const F=$('#filter');
+
+function row(u){
+  return '<tr data-id="'+u.id+'">'
+    +'<td><input type="checkbox" class="toggle" '+(u.active?'checked':'')+'></td>'
+    +'<td>'+(u.short||'')+'</td>'
+    +'<td>'+(u.name||'')+'</td>'
+    +'<td>'+(u.role||'')+'</td>'
+    +'<td>'
+      +'<button class="btn ghost edit">Bearbeiten</button> '
+      +'<button class="btn danger del">Löschen</button>'
+    +'</td>'
+  +'</tr>';
+}
+
+function render(){
+  const term=(F.value||'').toLowerCase();
+  const list=AEMP_USERS.list().filter(u=>!term
+    || (u.short||'').toLowerCase().includes(term)
+    || (u.name||'').toLowerCase().includes(term)
+    || (u.role||'').toLowerCase().includes(term));
+  T.innerHTML=list.length?list.map(row).join(''):'<tr><td colspan="5" class="subtle">Keine Benutzer</td></tr>';
+  wireTable();
+}
+
+function wireTable(){
+  T.querySelectorAll('.toggle').forEach(cb=>{
+    cb.onchange=()=>{ const id=cb.closest('tr').dataset.id; AEMP_USERS.toggle(id); render(); };
+  });
+  T.querySelectorAll('.edit').forEach(btn=>{
+    btn.onclick=()=>openDialog(parseInt(btn.closest('tr').dataset.id,10));
+  });
+  T.querySelectorAll('.del').forEach(btn=>{
+    btn.onclick=()=>{ const id=parseInt(btn.closest('tr').dataset.id,10); if(confirm('Benutzer wirklich löschen?')){{ AEMP_USERS.remove(id); render(); }} };
+  });
+}
+
+F.oninput=render;
+$('#btnNew').onclick=()=>openDialog(null);
+$('#btnExport').onclick=()=>{ const blob=new Blob([JSON.stringify(AEMP_USERS.list(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='benutzer.json'; a.click(); };
+
+const D=$('#dlg'); let editId=null;
+function openDialog(id){
+  editId=id;
+  const u=id?AEMP_USERS.list().find(x=>x.id===id):{short:'',name:'',username:'',role:'',active:true};
+  $('#dlgTitle').textContent=id?'Benutzer bearbeiten':'Benutzer anlegen';
+  $('#fShort').value=u.short||''; $('#fName').value=u.name||''; $('#fUser').value=u.username||''; $('#fRole').value=u.role||'';
+  D.hidden=false;
+}
+$('#dlgCancel').onclick=()=>D.hidden=true;
+$('#dlgSave').onclick=()=>{
+  const payload={ short:$('#fShort').value.trim(), name:$('#fName').value.trim(), username:$('#fUser').value.trim(), role:$('#fRole').value.trim(), active:true };
+  if(editId){ AEMP_USERS.update(editId,payload); } else { AEMP_USERS.create(payload); }
+  D.hidden=true; render();
+};
+
+render();
+</script>
+</body></html>
