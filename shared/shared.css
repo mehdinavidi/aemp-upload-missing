@@ -11,7 +11,7 @@
 .btn.ghost{background:#263245}
 .btn.primary{background:var(--primary)}
 .btn.danger{background:var(--danger)}
-.grid{display:grid;grid-template-columns:320px 1fr; gap:16px; padding:16px}
+.grid{display:grid;grid-template-columns:320px  1fr; gap:16px; padding:16px}
 aside#setList{background:var(--panel);border:1px solid var(--border);border-radius:10px; padding:10px; min-height:520px; overflow:auto}
 #details{background:var(--panel);border:1px solid var(--border);border-radius:10px; padding:12px; min-height:520px; overflow:auto}
 .card{background:#141a24;border:1px solid var(--border);border-radius:10px;padding:10px;margin:6px 0;cursor:pointer}
@@ -23,7 +23,6 @@ aside#setList{background:var(--panel);border:1px solid var(--border);border-radi
 .chip-ok{background:#162e2e;color:#aaf2e0}
 .placeholder{color:var(--muted)}
 .center{text-align:center}
-/* images + fab */
 .set-thumb{width:56px;height:40px;border-radius:6px;object-fit:cover;background:#2a2f36}
 .set-thumb.ph{background:#2a2f36;width:56px;height:40px;border-radius:6px}
 .gallery{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -43,3 +42,8 @@ aside#setList{background:var(--panel);border:1px solid var(--border);border-radi
 .tile.disabled .tile-footer{opacity:.8}
 .tile.disabled a{pointer-events:none}
 .badge-soon{position:absolute;top:10px;right:10px;background:#2b3242;color:#bac4d3;padding:4px 8px;border-radius:16px;font-size:.8rem}
+
+/* Drag-Visuals */
+.tile[draggable="true"] { cursor: grab; }
+.tile.dragging { opacity: .6; outline: 1px dashed var(--primary); }
+.tile.drag-over { outline: 2px dashed var(--primary); }

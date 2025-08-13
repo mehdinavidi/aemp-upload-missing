@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AEMP • Hauptmenü</title>
-<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.5">
+<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.6">
 </head><body>
 <header class="appbar"><div class="title">AEMP • Hauptmenü</div></header>
 
@@ -126,15 +126,19 @@
         <div class="tile-footer">Maschinen (Siegelgeräte)</div>
       </a>
     </div>
-      <div class="tile">
+    <div class="tile">
       <a href="/aemp-upload-missing/steri.html" style="display:flex;flex-direction:column;min-height:200px;color:inherit;text-decoration:none">
         <div class="tile-body">Steri-Freigabe</div>
         <div class="tile-footer">Steri-Freigabe</div>
       </a>
     </div>
-</div>
+  </div>
 </section>
 
-<script src="/aemp-upload-missing/shared/core.js?v=1.1.5"></script>
-<script> AEMP.session.requireLogin(); </script>
+<script src="/aemp-upload-missing/shared/core.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/menu_order.js?v=1.1.6"></script>
+<script>
+  AEMP.session.requireLogin();
+  AEMP_MENU.enable('.grid-tiles');
+</script>
 </body></html>
