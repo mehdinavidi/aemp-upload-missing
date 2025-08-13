@@ -31,6 +31,7 @@
     scope.querySelectorAll('input[type=file][data-upload]').forEach(inp=>{
       inp.onchange = async (e)=>{
         const [entity,id] = inp.dataset.upload.split(':');
+        if (typeof AEMP_IMAGES==="undefined") { alert("Bildspeicher nicht geladen."); return; }
         await AEMP_IMAGES.addImages(entity, id, Array.from(inp.files||[]));
         window.renderDetails(); // re-render to show new thumbs
       };
@@ -38,6 +39,7 @@
     scope.querySelectorAll('.ithumb').forEach(img=>{
       img.onclick = ()=>{
         const ent = img.dataset.entity, id = img.dataset.id, idx = +img.dataset.idx;
+        if (typeof AEMP_IMAGES==="undefined") return;
         const pics = AEMP_IMAGES.listImages(ent, id);
         const p = pics[idx];
         if (!p) return;

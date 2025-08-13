@@ -4,6 +4,7 @@
   function q(v=''){ return (v||'').toLowerCase().trim(); }
 
   window.renderSetList = function(term){
+    if (typeof AEMP_IMAGES === "undefined") { console.warn("AEMP_IMAGES fehlt (image_store.js nicht geladen)"); return; }
     const target = el();
     if (!target){ console.warn('setList not in DOM'); return; }
     const s = q(term);
