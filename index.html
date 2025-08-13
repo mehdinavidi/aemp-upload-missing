@@ -136,12 +136,32 @@
 </section>
 
 <script src="/aemp-upload-missing/shared/core.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/permissions.js?v=1.1.11"></script>
 <script src="/aemp-upload-missing/shared/users.js?v=1.1.7"></script>
 <script src="/aemp-upload-missing/shared/admin.js?v=1.1.10"></script>
 <script src="/aemp-upload-missing/shared/menu_order.js?v=1.1.6"></script>
 <script>
   AEMP.session.requireLogin();
   AEMP_MENU.enable('.grid-tiles');
+
+// Enforce per-user module permissions on dashboard clicks
+(function(){
+  const user = AEMP.session.getUser()||{};
+  const roleEntry = (window.AEMP_USERS && AEMP_USERS.list && AEMP_USERS.list().find(u=>u.username===user.username)) || null;
+  const role = roleEntry ? (roleEntry.role||'') : '';
+  document.querySelectorAll('.grid-tiles .tile a[href]').forEach(a=>{
+    const href = a.getAttribute('href')||'';
+    let mod = '';
+    const m = href.match(/seiten\/([^/]+)\//);
+    if(m && m[1]) mod = m[1];
+    else if(href.indexOf('packplatz.html')>-1) mod='packplatz';
+    else if(href.indexOf('steri.html')>-1) mod='steri';
+    if(!mod) return;
+    if(!AEMP_PERMS.canAccessModule(user.username||'', role, mod)){
+      a.addEventListener('click', function(e){ e.preventDefault(); alert('Kein Zugriff auf Modul: '+mod); });
+    }
+  });
+})();
   AEMP_ADMIN.applyState(document.querySelector('.grid-tiles'), AEMP_ADMIN.read());
   AEMP_ADMIN.buildAdminPanel(document.querySelector('.grid-tiles'), AEMP_ADMIN.read());
 </script>

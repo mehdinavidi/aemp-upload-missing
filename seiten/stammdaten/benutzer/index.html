@@ -107,5 +107,10 @@ $('#dlgSave').onclick=()=>{
 };
 
 render();
+
+// Overlay click / ESC to close Benutzer-Dialog
+document.getElementById('dlg').addEventListener('click', (e)=>{ if(e.target.id==='dlg') document.getElementById('dlg').hidden=true; });
+document.addEventListener('keydown', (e)=>{ const d=document.getElementById('dlg'); if(!d.hidden && e.key==='Escape'){ d.hidden=true; } });
+
 </script>
 </body></html>

@@ -16,16 +16,20 @@ window.Steri = (function(){
     }).join('') || '<tr><td colspan="4" class="subtle">Keine Sessions</td></tr>';
   }
   function init(){
+    const u = AEMP.session.getUser()||{};
+    const role = (AEMP_USERS.list().find(x=>x.username===u.username)||{}).role||'';
+    const canScan = AEMP_PERMS.can(u.username, role, 'steri', 'scan');
+    const canFree = AEMP_PERMS.can(u.username, role, 'steri', 'freigeben');
     const scan = q('#scan');
-    scan?.addEventListener('keydown', e=>{
+    if(canScan){ scan?.addEventListener('keydown', e=>{
       if (e.key!=='Enter') return;
       const label = scan.value.trim();
       if(!label) return;
       const sess = AEMP.state.findByLabel(label);
       if (sess){ sess.status='eingescannt'; AEMP.state.saveSessions(AEMP.state.getSessions()); }
       scan.value=''; render();
-    });
-    q('#btnFreigeben')?.addEventListener('click', ()=>{
+    }); } else { if(scan) { scan.disabled = true; scan.placeholder='Kein Recht zum Scannen'; } }
+    if(canFree){ q('#btnFreigeben')?.addEventListener('click', ()=>{
       const list = AEMP.state.getSessions();
       document.querySelectorAll('tbody .mark:checked').forEach(cb=>{
         const label = cb.closest('tr').dataset.label;
@@ -33,7 +37,7 @@ window.Steri = (function(){
         if (s) s.status='freigegeben';
       });
       AEMP.state.saveSessions(list); render();
-    });
+    }); } else { const b=q('#btnFreigeben'); if(b) { b.disabled=true; b.title='Kein Recht zur Freigabe'; } }
     render();
   }
   return { init, render };

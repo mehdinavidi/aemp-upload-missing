@@ -73,5 +73,17 @@ window.Packplatz = window.Packplatz || {};
     document.getElementById('startPack').onclick = ()=> window.Packplatz.startPack();
     document.getElementById('cancelBtn').onclick = ()=> alert('Stornieren (Platzhalter)');
     document.getElementById('reportBtn').onclick = ()=> alert('Packformular (Platzhalter)');
+// Permissions: show/hide action buttons
+try{
+  const u = AEMP.session.getUser()||{};
+  const role = (AEMP_USERS.list().find(x=>x.username===u.username)||{}).role||'';
+  const canForm = AEMP_PERMS.can(u.username, role, 'packplatz', 'packformular');
+  const canStorno = AEMP_PERMS.can(u.username, role, 'packplatz', 'stornieren');
+  const canPack = AEMP_PERMS.can(u.username, role, 'packplatz', 'packen');
+  document.getElementById('reportBtn').style.display = canForm ? '' : 'none';
+  document.getElementById('cancelBtn').style.display = canStorno ? '' : 'none';
+  document.getElementById('startPack').style.display = canPack ? '' : 'none';
+} catch(e){}
+
   };
 })(window.Packplatz);
