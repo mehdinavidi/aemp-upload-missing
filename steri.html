@@ -1,1 +1,22 @@
-<!DOCTYPE html><title>Steri</title>
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steri-Freigabe</title>
+<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.4">
+</head><body>
+<header class="appbar"><a href="/aemp-upload-missing/index.html" class="home">Home</a><div class="title">Steri-Freigabe</div></header>
+<main class="steri" style="padding:16px">
+  <input id="scan" class="btn ghost" style="width:100%;max-width:520px" placeholder="Etikett scannen (Enter)" autofocus>
+  <div style="height:10px"></div>
+  <table id="table" class="table">
+    <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th>Aktion</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div style="height:12px"></div>
+  <button id="btnFreigeben" class="btn primary">Markierte freigeben</button>
+</main>
+<script src="/aemp-upload-missing/shared/core.js?v=1.1.4"></script>
+<script src="/aemp-upload-missing/shared/state.js?v=1.1.4"></script>
+<script src="/aemp-upload-missing/shared/data.js?v=1.1.4"></script>
+<script src="/aemp-upload-missing/modules/steri/steri.js?v=1.1.4"></script>
+<script> AEMP.session.requireLogin(); Steri.init(); </script>
+</body></html>
