@@ -1,6 +1,9 @@
-// shared/admin.js  (V1.1.9) – Admin: Tiles aktivieren/deaktivieren (10 pro Seite + Blättern)
+// shared/admin.js  (V1.1.10)
+// Admin: feste Fenstergröße, scrollbare Liste, Drag & Drop Sortierung (per Benutzer), Aktiv/Deaktiv
 (function(){
-  const KEY = 'aemp_modules_enabled_v1';
+  const KEY_ENABLED = 'aemp_modules_enabled_v1';
+
+  // Dashboard-Defaults (aktiv/inaktiv)
   const DEFAULTS = {
     'stammdaten': false,
     'instr-management': false,
@@ -21,10 +24,20 @@
     'maschinen-siegelgeraete': false,
     'steri': true
   };
-  const PAGE_SIZE = 10;
 
-  function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null') || DEFAULTS; }catch(e){ return DEFAULTS; } }
-  function save(cfg){ try{ localStorage.setItem(KEY, JSON.stringify(cfg)); }catch(e){} }
+  // ---- Helpers: enabled-config (global, browserweit) ----
+  function readEnabled(){ try{ return JSON.parse(localStorage.getItem(KEY_ENABLED)||'null') || DEFAULTS; }catch(e){ return DEFAULTS; } }
+  function saveEnabled(cfg){ try{ localStorage.setItem(KEY_ENABLED, JSON.stringify(cfg)); }catch(e){} }
+
+  // ---- Helpers: order per user (wie menu_order.js) ----
+  function getUserName(){ try{ return (window.AEMP?.session?.getUser?.() || {}).username || 'anon'; }catch(e){ return 'anon'; } }
+  function orderKey(){ return 'aemp_menu_order_' + getUserName(); }
+  function readOrder(){
+    try{ const raw = localStorage.getItem(orderKey()); return raw? JSON.parse(raw): []; }catch(e){ return []; }
+  }
+  function saveOrder(slugs){
+    try{ localStorage.setItem(orderKey(), JSON.stringify(slugs||[])); }catch(e){}
+  }
 
   function getRoleOfCurrentUser(){
     try{
@@ -72,7 +85,8 @@
     });
   }
 
-  function buildAdminPanel(container, cfg){
+  // ----- Admin Panel -----
+  function buildAdminPanel(container, cfgEnabled){
     if(!container) return;
     const role = getRoleOfCurrentUser();
     if((role||'').toLowerCase().indexOf('admin')===-1) return;
@@ -84,76 +98,116 @@
     fab.appendChild(btn);
     document.body.appendChild(fab);
 
-    // Lightbox container
+    // Lightbox (fixed size, scrollable list)
     const lb = document.createElement('div');
     lb.className='lightbox'; lb.style.display='none';
-    lb.innerHTML = '<div class="lightbox-inner" style="min-width:560px;max-width:95vw">\
-      <h3>Hauptmenü konfigurieren</h3>\
-      <div id="adminList" class="vstack" style="gap:6px;align-items:stretch"></div>\
-      <div class="hstack" style="justify-content:space-between;align-items:center;margin-top:8px">\
-        <div class="hstack" style="gap:6px">\
-          <button id="aPrev" class="btn ghost">◀</button>\
-          <span id="aPage" class="subtle">Seite 1/1</span>\
-          <button id="aNext" class="btn ghost">▶</button>\
-        </div>\
-        <div class="hstack" style="gap:8px">\
-          <button id="aCancel" class="btn ghost">Schließen</button>\
-          <button id="aSave" class="btn primary">Speichern</button>\
-        </div>\
-      </div>\
-    </div>';
+    lb.innerHTML = ''+
+      '<div class="lightbox-inner" style="width:720px;max-width:95vw;height:560px;max-height:95vh;display:flex;flex-direction:column">'+
+        '<h3>Hauptmenü konfigurieren</h3>'+
+        '<div id="adminList" style="flex:1; overflow:auto; margin:6px 0; padding-right:4px"></div>'+
+        '<div class="hstack" style="gap:8px; justify-content:space-between">'+
+          '<div class="subtle">Tipp: Reihenfolge mit der Maus verschieben (Drag & Drop)</div>'+
+          '<div class="hstack" style="gap:8px">'+
+            '<button id="aCancel" class="btn ghost">Schließen</button>'+
+            '<button id="aSave" class="btn primary">Speichern</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
     document.body.appendChild(lb);
 
-    // Collect all tiles (with slug + title)
+    // Collect tile list
     const tiles = Array.from(container.querySelectorAll('.tile')).map(t=>{
       const slug = tileSlug(t);
       const title = t.querySelector('.tile-footer')?.textContent || slug;
       return { slug, title };
     }).filter(x=>x.slug);
 
-    let page = 0;
-    const maxPage = Math.max(0, Math.ceil(tiles.length / PAGE_SIZE) - 1);
+    // Build rows with drag handles
+    const list = lb.querySelector('#adminList');
 
-    function renderPage(){
-      const list = lb.querySelector('#adminList'); list.innerHTML='';
-      const start = page*PAGE_SIZE;
-      const slice = tiles.slice(start, start + PAGE_SIZE);
-      slice.forEach(it=>{
-        const row = document.createElement('label');
-        row.className='card'; row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px';
-        const checked = (it.slug in cfg ? !!cfg[it.slug] : true) ? 'checked' : '';
-        row.innerHTML = '<input type="checkbox" '+checked+' data-slug="'+it.slug+'">\
-                         <div>'+it.title+'</div>\
-                         <div class="subtle" style="margin-left:auto">('+it.slug+')</div>';
+    function renderRows(order){
+      list.innerHTML='';
+      // decide order: if order (saved) not empty, respect that
+      const bySlug = new Map(tiles.map(x=>[x.slug,x]));
+      const used = new Set();
+      const final = [];
+      if(order && order.length){
+        order.forEach(s=>{ if(bySlug.has(s)){ final.append?final.append(bySlug.get(s)):final.push(bySlug.get(s)); used.add(s);} });
+      }
+      tiles.forEach(x=>{ if(!used.has(x.slug)) final.push(x); });
+
+      final.forEach(it=>{
+        const row = document.createElement('div');
+        row.className='card';
+        row.style.display='grid';
+        row.style.gridTemplateColumns='28px 1fr auto';
+        row.style.alignItems='center';
+        row.style.gap='10px';
+        row.draggable = true;
+        row.dataset.slug = it.slug;
+        row.innerHTML = ''+
+          '<div class="dragHandle" title="Ziehen" style="cursor:grab">⋮⋮</div>'+
+          '<div><div>'+it.title+'</div><div class="subtle">('+it.slug+')</div></div>'+
+          '<label style="display:flex;align-items:center;gap:6px"><input type="checkbox" data-slug="'+it.slug+'"> aktiv</label>';
         list.appendChild(row);
       });
-      lb.querySelector('#aPage').textContent = 'Seite ' + (page+1) + '/' + (maxPage+1);
-      lb.querySelector('#aPrev').disabled = (page<=0);
-      lb.querySelector('#aNext').disabled = (page>=maxPage);
+
+      // set checkbox states
+      final.forEach(it=>{
+        const cb = list.querySelector('input[type=checkbox][data-slug="'+it.slug+'"]');
+        const enabled = (it.slug in cfgEnabled) ? !!cfgEnabled[it.slug] : true;
+        if(cb) cb.checked = enabled;
+      });
+
+      // wire drag & drop
+      let dragging = null;
+      Array.from(list.children).forEach(row=>{
+        row.addEventListener('dragstart', e=>{
+          dragging = row;
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          try{ e.dataTransfer.setData('text/plain', row.dataset.slug); }catch(_){}
+        });
+        row.addEventListener('dragend', ()=>{
+          if(dragging){ dragging.classList.remove('dragging'); dragging=null; }
+        });
+        row.addEventListener('dragover', e=>{
+          e.preventDefault();
+          if(!dragging || dragging===row) return;
+          const rect = row.getBoundingClientRect();
+          const midpoint = rect.top + rect.height/2;
+          const before = e.clientY < midpoint;
+          if(before) list.insertBefore(dragging, row);
+          else list.insertBefore(dragging, row.nextSibling);
+        });
+        row.addEventListener('drop', e=>{ e.preventDefault(); });
+      });
     }
 
-    function open(){ renderPage(); lb.style.display='flex'; }
+    // initial render with saved order
+    renderRows(readOrder());
+
     function close(){ lb.style.display='none'; }
+    function open(){ lb.style.display='flex'; }
 
     btn.onclick = open;
     lb.querySelector('#aCancel').onclick = close;
-    lb.querySelector('#aPrev').onclick = function(){
-      // merge current page changes into cfg before changing page
-      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
-      if(page>0){ page--; renderPage(); }
-    };
-    lb.querySelector('#aNext').onclick = function(){
-      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
-      if(page<maxPage){ page++; renderPage(); }
-    };
     lb.querySelector('#aSave').onclick = function(){
-      // capture current page
-      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
-      save(cfg);
-      applyState(container, cfg);
+      // collect order
+      const slugs = Array.from(list.children).map(el=>el.dataset.slug).filter(Boolean);
+      saveOrder(slugs);
+      // collect enable-state
+      const newCfg = Object.assign({}, readEnabled());
+      list.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{
+        newCfg[cb.dataset.slug] = cb.checked;
+      });
+      saveEnabled(newCfg);
+      // apply both
+      if(window.AEMP_MENU){ AEMP_MENU.enable('.grid-tiles'); } // reapply current DOM order baseline
+      if(window.AEMP_ADMIN){ AEMP_ADMIN.applyState(container, newCfg); }
       close();
     };
   }
 
-  window.AEMP_ADMIN = { read, save, applyState, buildAdminPanel };
+  window.AEMP_ADMIN = { read: readEnabled, save: saveEnabled, applyState, buildAdminPanel };
 })();
