@@ -1,7 +1,6 @@
-// shared/admin.js  (V1.1.8) – Admin: Tiles aktivieren/deaktivieren
+// shared/admin.js  (V1.1.9) – Admin: Tiles aktivieren/deaktivieren (10 pro Seite + Blättern)
 (function(){
   const KEY = 'aemp_modules_enabled_v1';
-  // Default-Status
   const DEFAULTS = {
     'stammdaten': false,
     'instr-management': false,
@@ -20,8 +19,9 @@
     'maschinen-steri': false,
     'maschinen-trockner': false,
     'maschinen-siegelgeraete': false,
-    'steri': true // für die Kachel "Steri-Freigabe" die separat gerendert wird
+    'steri': true
   };
+  const PAGE_SIZE = 10;
 
   function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null') || DEFAULTS; }catch(e){ return DEFAULTS; } }
   function save(cfg){ try{ localStorage.setItem(KEY, JSON.stringify(cfg)); }catch(e){} }
@@ -43,7 +43,6 @@
     let href = a ? a.getAttribute('href') : '';
     let m = href.match(/seiten\/([^/]+)\//);
     let s = (m && m[1]) ? m[1] : (href.includes('packplatz.html') ? 'packplatz' : (href.includes('steri.html') ? 'steri' : ''));
-    // Fallback: Versuche den Footer-Text zu sluggen
     if(!s){
       const txt = (tile.querySelector('.tile-footer')?.textContent || '').toLowerCase().trim();
       s = txt.replace(/[()]/g,'').replace(/\s+|\/+/g,'-').replace(/[^a-z0-9\-_.]/g,'');
@@ -75,7 +74,6 @@
 
   function buildAdminPanel(container, cfg){
     if(!container) return;
-    // Only show to Administrators
     const role = getRoleOfCurrentUser();
     if((role||'').toLowerCase().indexOf('admin')===-1) return;
 
@@ -86,42 +84,76 @@
     fab.appendChild(btn);
     document.body.appendChild(fab);
 
-    // Lightbox
+    // Lightbox container
     const lb = document.createElement('div');
     lb.className='lightbox'; lb.style.display='none';
-    lb.innerHTML = '<div class="lightbox-inner" style="min-width:520px;max-width:90vw"><h3>Hauptmenü konfigurieren</h3><div id="adminList" class="vstack" style="gap:6px;align-items:stretch"></div><div class="hstack" style="gap:8px"><button id="aCancel" class="btn ghost">Schließen</button><button id="aSave" class="btn primary">Speichern</button></div></div>';
+    lb.innerHTML = '<div class="lightbox-inner" style="min-width:560px;max-width:95vw">\
+      <h3>Hauptmenü konfigurieren</h3>\
+      <div id="adminList" class="vstack" style="gap:6px;align-items:stretch"></div>\
+      <div class="hstack" style="justify-content:space-between;align-items:center;margin-top:8px">\
+        <div class="hstack" style="gap:6px">\
+          <button id="aPrev" class="btn ghost">◀</button>\
+          <span id="aPage" class="subtle">Seite 1/1</span>\
+          <button id="aNext" class="btn ghost">▶</button>\
+        </div>\
+        <div class="hstack" style="gap:8px">\
+          <button id="aCancel" class="btn ghost">Schließen</button>\
+          <button id="aSave" class="btn primary">Speichern</button>\
+        </div>\
+      </div>\
+    </div>';
     document.body.appendChild(lb);
 
-    function open(){
+    // Collect all tiles (with slug + title)
+    const tiles = Array.from(container.querySelectorAll('.tile')).map(t=>{
+      const slug = tileSlug(t);
+      const title = t.querySelector('.tile-footer')?.textContent || slug;
+      return { slug, title };
+    }).filter(x=>x.slug);
+
+    let page = 0;
+    const maxPage = Math.max(0, Math.ceil(tiles.length / PAGE_SIZE) - 1);
+
+    function renderPage(){
       const list = lb.querySelector('#adminList'); list.innerHTML='';
-      const tiles = Array.from(container.querySelectorAll('.tile'));
-      tiles.forEach(t=>{
-        const slug = tileSlug(t); if(!slug) return;
-        const title = t.querySelector('.tile-footer')?.textContent || slug;
+      const start = page*PAGE_SIZE;
+      const slice = tiles.slice(start, start + PAGE_SIZE);
+      slice.forEach(it=>{
         const row = document.createElement('label');
         row.className='card'; row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px';
-        row.innerHTML = '<input type="checkbox" '+ ((slug in cfg? cfg[slug]:true)?'checked':'') +' data-slug="'+slug+'"> <div>'+title+'</div><div class="subtle" style="margin-left:auto">('+slug+')</div>';
+        const checked = (it.slug in cfg ? !!cfg[it.slug] : true) ? 'checked' : '';
+        row.innerHTML = '<input type="checkbox" '+checked+' data-slug="'+it.slug+'">\
+                         <div>'+it.title+'</div>\
+                         <div class="subtle" style="margin-left:auto">('+it.slug+')</div>';
         list.appendChild(row);
       });
-      lb.style.display='flex';
+      lb.querySelector('#aPage').textContent = 'Seite ' + (page+1) + '/' + (maxPage+1);
+      lb.querySelector('#aPrev').disabled = (page<=0);
+      lb.querySelector('#aNext').disabled = (page>=maxPage);
     }
+
+    function open(){ renderPage(); lb.style.display='flex'; }
     function close(){ lb.style.display='none'; }
 
     btn.onclick = open;
     lb.querySelector('#aCancel').onclick = close;
+    lb.querySelector('#aPrev').onclick = function(){
+      // merge current page changes into cfg before changing page
+      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
+      if(page>0){ page--; renderPage(); }
+    };
+    lb.querySelector('#aNext').onclick = function(){
+      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
+      if(page<maxPage){ page++; renderPage(); }
+    };
     lb.querySelector('#aSave').onclick = function(){
-      const newCfg = Object.assign({}, read());
-      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{
-        newCfg[cb.dataset.slug] = cb.checked;
-      });
-      save(newCfg);
-      applyState(container, newCfg);
+      // capture current page
+      lb.querySelectorAll('input[type=checkbox][data-slug]').forEach(cb=>{ cfg[cb.dataset.slug]=cb.checked; });
+      save(cfg);
+      applyState(container, cfg);
       close();
     };
   }
 
-  // Public API
-  window.AEMP_ADMIN = {
-    read, save, applyState, buildAdminPanel
-  };
+  window.AEMP_ADMIN = { read, save, applyState, buildAdminPanel };
 })();
