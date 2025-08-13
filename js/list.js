@@ -1,18 +1,17 @@
-
-// js/list.js – robust list rendering
+// js/list.js – robuste Setliste
 (function(){
   function el(){ return document.getElementById('setList'); }
-  function q(value=''){ return (value||'').toLowerCase().trim(); }
+  function q(v=''){ return (v||'').toLowerCase().trim(); }
 
   window.renderSetList = function(term){
-    const setListEl = el();
-    if (!setListEl){ console.warn('setListEl missing – skipping renderSetList'); return; }
+    const target = el();
+    if (!target){ console.warn('setList not in DOM'); return; }
     const s = q(term);
     const sets = (window.DATA?.sets||[]).filter(x=>!s || x.name.toLowerCase().includes(s) || x.code.toLowerCase().includes(s));
-    setListEl.innerHTML = sets.map(set=>`
+    target.innerHTML = sets.map(set=>`
       <div class="card set-item" data-id="${set.id}">
-        <div class="hstack" style="gap:10px; align-items:center">
-          <img src="${set.image_url||''}" class="set-thumb" alt="">
+        <div class="hstack" style="gap:12px;align-items:center">
+          <div class="set-thumb-wrap">${(AEMP_IMAGES.listImages('sets', set.id)[0]?.thumb ? `<img class="set-thumb" src="${AEMP_IMAGES.listImages('sets', set.id)[0].thumb}">` : '<div class="set-thumb ph"></div>')}</div>
           <div class="grow">
             <div class="title">${set.code} – ${set.name}</div>
             <div class="subtle">${set.department||''}</div>
@@ -21,7 +20,7 @@
         </div>
       </div>`).join('') || '<div class="placeholder">Keine Sets</div>';
 
-    setListEl.querySelectorAll('.set-item').forEach(card=>{
+    target.querySelectorAll('.set-item').forEach(card=>{
       card.addEventListener('click', ()=>{
         window.selectedSetId = parseInt(card.getAttribute('data-id'),10);
         if (typeof window.renderDetails==='function') window.renderDetails();
