@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="de"><head>
-  <base href="/aemp-upload-missing/">
+<!DOCTYPE html><html lang="de">\1\n  <base href="/aemp-upload-missing/">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stammdaten • Benutzer</title>
 <link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.7">
@@ -37,7 +36,8 @@
     <input id="fShort" class="btn ghost" placeholder="Kürzel (z. B. IPS1)" style="width:100%">
     <input id="fName" class="btn ghost" placeholder="Bezeichnung / Name" style="width:100%">
     <input id="fUser" class="btn ghost" placeholder="Login (z. B. ips-6)" style="width:100%">
-    <input id="fRole" class="btn ghost" placeholder="Rolle (z. B. Administrator)" style="width:100%">
+    <select id="fRole" class="btn ghost" style="width:100%"><option>Benutzer</option><option>Administrator</option></select>
+    <input id="fPass" class="btn ghost" placeholder="Passwort (Neu: Pflicht / Bearbeiten: leer = unverändert)" style="width:100%">
     <div class="hstack" style="gap:8px">
       <button id="dlgCancel" type="button" class="btn ghost">Abbrechen</button>
       <button id="dlgSave" type="button" class="btn primary">Speichern</button>
@@ -103,7 +103,19 @@ function openDialog(id){
 $('#dlgCancel').onclick=()=>D.hidden=true;
 $('#dlgSave').onclick=()=>{
   const payload={ short:$('#fShort').value.trim(), name:$('#fName').value.trim(), username:$('#fUser').value.trim(), role:$('#fRole').value.trim(), active:true };
-  if(editId){ AEMP_USERS.update(editId,payload); } else { AEMP_USERS.create(payload); }
+  if(editId){ AEMP_USERS.update(editId,payload); } else {
+    const short = $('#fShort').value.trim();
+    const name  = $('#fName').value.trim();
+    const uname = $('#fUser').value.trim();
+    const role  = $('#fRole').value.trim();
+    const pass  = $('#fPass').value.trim();
+    if(!short || !name || !uname || !role){ alert('Bitte alle Felder ausfüllen.'); return; }
+    const exists = (AEMP_USERS.list()||[]).some(x=>String(x.username).toLowerCase()===uname.toLowerCase());
+    if(exists){ alert('Benutzername bereits vorhanden.'); return; }
+    if(!pass){ alert('Passwort ist erforderlich.'); return; }
+    payload.password_hash = await (AEMP_USERS._sha256 ? AEMP_USERS._sha256(pass) : pass);
+    AEMP_USERS.create(payload);
+  }
   D.hidden=true; render();
 };
 

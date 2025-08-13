@@ -17,3 +17,42 @@
   function toggle(id){ const list=load(); const u=list.find(x=>x.id==id); if(u){ u.active=!u.active; save(list);} }
   window.AEMP_USERS = { list, create, update, remove, toggle };
 })();
+
+(function(){
+  async function sha256(input){
+    if (window.crypto && window.crypto.subtle){
+      const enc = new TextEncoder().encode(input);
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b => b.toString(16).padStart(2,'0')).join('');
+    } else {
+      let h = 5381; for (let i=0;i<input.length;i++){ h = ((h<<5)+h) ^ input.charCodeAt(i); }
+      return String(h>>>0);
+    }
+  }
+  async function validate(username, password){
+    try{
+      const list = AEMP_USERS.list();
+      const u = list.find(x=>String(x.username).toLowerCase()===String(username).toLowerCase());
+      if(!u){ return ['ips-1','ips-2','ips-3','ips-4','ips-5'].includes(username) && password==='bilder'; }
+      if(u.password_hash){
+        const hash = await sha256(password);
+        return hash === u.password_hash;
+      } else {
+        return password==='bilder';
+      }
+    }catch(e){ return false; }
+  }
+  async function setPassword(username, newPlain){
+    const list = AEMP_USERS.list();
+    const i = list.findIndex(x=>String(x.username).toLowerCase()===String(username).toLowerCase());
+    if(i<0) return false;
+    list[i].password_hash = await sha256(newPlain);
+    try{ localStorage.setItem('aemp_users_v1', JSON.stringify(list)); }catch(e){}
+    return true;
+  }
+  if (!window.AEMP_USERS) window.AEMP_USERS = {};
+  window.AEMP_USERS.validate = validate;
+  window.AEMP_USERS.setPassword = setPassword;
+  window.AEMP_USERS._sha256 = sha256;
+})();
