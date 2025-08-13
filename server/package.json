@@ -1,8 +1,0 @@
-{
-  "name": "aemp-upload-proxy",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "octokit": "^4.0.0"
-  }
-}
