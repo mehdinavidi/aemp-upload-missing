@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## V.1.1.20
-- **Packplatz** integriert: Tabelle mit fixierten ersten drei Spalten; Rechtsklick-Kontextmenü zum Ein-/Ausblenden weiterer Spalten.
-- **Barcode/Kürzel-Feld** (Autofokus + Auto-Select) – sofort scannerbereit bei Öffnen der Seite und nach Fokuswechseln.
-- **Enter** im Barcodefeld öffnet den **Packvorgang** des gescannten Kürzels.
-- **Packvorgang-Dialog**: Soll/Ist (+/−), Status-Icons (✔ ❗ ✖), Gründe-Auswahl, Live-Zähler, Speichern/Stornieren/Fertig packen.
-- UI-Feinschliff & kleinere Korrekturen aus V.1.1.17 übernommen.
-
+## V.1.1.21
+- Änderungen **direkt auf bestehender Packplatz-Seite** integriert.
+- Tabelle: erste drei Spalten fixiert (Set Bild, Kürzel, Set Bezeichnung); übrige Spalten per Rechtsklick ein-/ausblendbar.
+- **Barcode/Kürzel-Feld** mit Autofokus & Auto-Select (scannerbereit bei Öffnen).
+- **Enter** im Barcodefeld öffnet sofort den Packvorgang des gefundenen Kürzels.
+- Packvorgang-Dialog mit Soll/Ist (+/−), Status-Icons (✔ ❗ ✖), Grund-Auswahl und Live-Zählern.
+- Doppelklick auf Tabellenzeile öffnet Packdialog.

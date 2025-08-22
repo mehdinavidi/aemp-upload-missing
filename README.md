@@ -1,11 +1,6 @@
-# AEMP Demo – V.1.1.20
+# AEMP Demo – V.1.1.21
 
-Diese Version basiert auf deiner letzten vollständigen **V.1.1.17** und integriert die neuen Packplatz-Funktionen (Spalten, Barcode, Packdialog).
+Diese Version baut auf deiner V.1.1.17 auf und **ändert die bestehende Packplatz-Seite** wie besprochen (Spalten, Barcode, Packdialog).
 
-**Neu (kurz):**
-- Packplatz-Tabelle mit sticky Spalten, Spaltenmenü.
-- Barcode/Kürzel-Feld (Autofokus, Auto-Select) → Direktstart Packvorgang.
-- Packvorgang-Dialog mit Soll/Ist, Status, Gründen und Live-Zählern.
-
-Erstellt: 2025-08-22 21:21
+Erstellt: 2025-08-22 21:31
 
