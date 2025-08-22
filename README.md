@@ -1,6 +1,8 @@
-# AEMP Demo – V.1.1.21
+# AEMP Demo – V.1.1.25
 
-Diese Version baut auf deiner V.1.1.17 auf und **ändert die bestehende Packplatz-Seite** wie besprochen (Spalten, Barcode, Packdialog).
+Diese Version liefert die Packplatz-Funktionalität **als Module** (ohne eigene Seite):
+- `modules/packplatz/list.js` – Set-Tabelle mit Barcode/Enter, sticky Spalten, Spaltenmenü, Persistenz
+- `modules/packplatz/pack.js` – Packdialog (Soll/Ist, ✔ ❗ ✖, Gründe, Persistenz)
+- `modules/packplatz/details.js` – rechte Detailansicht (Bild/Meta/Instrumente)
 
-Erstellt: 2025-08-22 21:31
-
+**Integration**: Binde die Module in eine beliebige Seite ein und verdrahte die Provider-Funktionen (`getSets`, `loadDetails`, `getItemsForSet`) mit eurer API.
