@@ -3,51 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AEMP • Packplatz – V.1.1.21</title>
+  <title>AEMP • Packplatz – V.1.1.22</title>
   <style>
-    :root{
-      --bg:#0f172a;--card:#111827ee;--muted:#94a3b8;--text:#e5e7eb;
-      --accent:#22d3ee;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;
-      --shadow:0 10px 30px rgba(0,0,0,.35);--radius:1rem;
-      --w-img:84px; --w-code:160px; --w-name:320px;
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#0b1225 40%, #04070f 95%), var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Inter}
-    header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(120%) blur(10px);background:linear-gradient(180deg,rgba(2,6,23,.9),rgba(2,6,23,.6));border-bottom:1px solid rgba(255,255,255,.06)}
-    .container{max-width:1200px;margin:auto;padding:16px}
+    :root{--bg:#0f172a;--panel:#0b1220;--text:#e5e7eb;--muted:#94a3b8;--accent:#3b82f6;--shadow:0 10px 30px rgba(0,0,0,.35);--radius:12px;
+      --w-img:72px;--w-code:140px;--w-name:260px;}
+    *{box-sizing:border-box} html,body{height:100%} body{margin:0;background:#050912;color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Inter}
+    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(3,6,15,.95),rgba(3,6,15,.75));border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px)}
+    .container{max-width:1200px;margin:auto;padding:14px 16px}
     .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:.5ch;border:1px solid rgba(255,255,255,.1);padding:6px 10px;border-radius:999px;color:#cbd5e1}
-    .btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;background:#172033;color:var(--text);box-shadow:var(--shadow);cursor:pointer}
+    .btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;background:#162038;color:#fff;box-shadow:var(--shadow);cursor:pointer}
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.12)}
-    main{max-width:1200px;margin:22px auto;padding:0 16px 80px}
-    .card{background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(17,24,39,.75));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-wrap:wrap}
-    .table-wrap{overflow:auto}
-    table{width:max(1400px,100%);border-collapse:separate;border-spacing:0}
-    th,td{padding:10px 12px;border-bottom:1px dashed rgba(255,255,255,.08);text-align:left;vertical-align:middle;white-space:nowrap}
-    thead th{position:sticky;top:0;background:rgba(17,24,39,.95);backdrop-filter:blur(6px);z-index:2;font-size:12px;color:#9fb0c8;letter-spacing:.2px}
-    tbody tr:hover td{background:rgba(255,255,255,.03)}
-    th.sticky-0, td.sticky-0{position:sticky;left:0;z-index:3;background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(17,24,39,.92))}
-    th.sticky-1, td.sticky-1{position:sticky;left:var(--w-img);z-index:3;background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(17,24,39,.92))}
-    th.sticky-2, td.sticky-2{position:sticky;left:calc(var(--w-img) + var(--w-code));z-index:3;background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(17,24,39,.92))}
-    th.col-img, td.col-img{width:var(--w-img);min-width:var(--w-img);max-width:var(--w-img)}
-    th.col-code, td.col-code{width:var(--w-code);min-width:var(--w-code)}
-    th.col-name, td.col-name{width:var(--w-name);min-width:var(--w-name)}
+    .pill{display:inline-flex;align-items:center;gap:.5ch;border:1px solid rgba(255,255,255,.12);padding:6px 10px;border-radius:999px;color:#cbd5e1}
+    .layout{max-width:1200px;margin:18px auto;display:grid;grid-template-columns: 1.3fr 1fr;gap:16px;padding:0 16px 80px}
+    .panel{background:linear-gradient(180deg,rgba(14,20,35,.96),rgba(14,20,35,.86));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .panel-body{padding:10px 12px}
+    input[type=text]{background:#0b1020;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:10px 12px;min-width:320px}
+    /* table left */ .table-wrap{overflow:auto} table{width:max(1200px,100%);border-collapse:separate;border-spacing:0}
+    th,td{padding:10px 12px;border-bottom:1px dashed rgba(255,255,255,.08);white-space:nowrap;text-align:left}
+    thead th{position:sticky;top:0;background:rgba(17,24,39,.96);z-index:2;font-size:12px;color:#9fb0c8}
+    tbody tr:hover td{background:rgba(255,255,255,.04)}
+    th.sticky-0,td.sticky-0{position:sticky;left:0;background:rgba(17,24,39,.98);z-index:3}
+    th.sticky-1,td.sticky-1{position:sticky;left:var(--w-img);background:rgba(17,24,39,.98);z-index:3}
+    th.sticky-2,td.sticky-2{position:sticky;left:calc(var(--w-img) + var(--w-code));background:rgba(17,24,39,.98);z-index:3}
+    th.col-img,td.col-img{width:var(--w-img);min-width:var(--w-img);max-width:var(--w-img)}
+    th.col-code,td.col-code{width:var(--w-code);min-width:var(--w-code)}
+    th.col-name,td.col-name{width:var(--w-name);min-width:var(--w-name)}
     .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.18);font-size:12px}
-    .ok{color:#10b981;border-color:#10b98155}
-    .warn{color:#f59e0b;border-color:#f59e0b55}
-    .muted{color:#94a3b8}
-    .ctx{position:fixed;display:none;min-width:260px;background:#0b1020;border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);border-radius:10px;padding:8px;z-index:10}
-    .ctx h4{margin:6px 8px 8px;font-size:12px;color:#9fb0c8;text-transform:uppercase;letter-spacing:.6px}
-    .ctx .item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px}
-    .ctx .item:hover{background:rgba(255,255,255,.05)}
-    .ctx input[type="checkbox"]{accent-color:#22d3ee}
-    dialog{width:min(940px,96vw);border:0;border-radius:16px;background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(15,23,42,.94));color:var(--text);box-shadow:var(--shadow)}
-    dialog::backdrop{backdrop-filter:blur(8px);background:rgba(0,0,0,.5)}
-    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.06)}
-    select, input[type=number], input[type=text]{background:#0b1020;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--text);padding:8px 10px}
-    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 8px;font-size:12px}
+    .ok{color:#10b981;border-color:#10b98155} .warn{color:#f59e0b;border-color:#f59e0b55} .muted{color:#94a3b8}
+    /* context menu */ .ctx{position:fixed;display:none;min-width:250px;background:#0b1020;border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);border-radius:10px;padding:8px;z-index:10}
+    .ctx h4{margin:6px 8px 8px;font-size:12px;color:#9fb0c8;letter-spacing:.6px}
+    .ctx .item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px} .ctx .item:hover{background:rgba(255,255,255,.06)}
+    .ctx input[type=checkbox]{accent-color:#22d3ee}
+    /* detail (right) */ .hero{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .thumb{width:96px;height:64px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+    .grid{display:grid;gap:10px} .grid.cols-4{grid-template-columns:1fr 1fr 1fr 1fr}
+    .line{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06);padding-top:8px;margin-top:8px}
   </style>
 </head>
 <body>
@@ -55,27 +46,27 @@
     <div class="container">
       <div class="row">
         <div class="row" style="gap:8px">
-          <a class="btn ghost" href="../../index.html">🏠 Hauptmenü</a>
-          <span class="pill">AEMP • Packplatz</span>
+          <a class="btn ghost" href="../../index.html">🏠 Home</a>
+          <span class="pill">Packplatz</span>
         </div>
         <div class="row" style="gap:8px">
-          <span class="pill">Version <strong>V.1.1.21</strong></span>
-          <button class="btn ghost" id="resetPrefs">Spalten zurücksetzen</button>
+          <span class="pill">Version <strong>V.1.1.22</strong></span>
         </div>
       </div>
       <div class="row" style="margin-top:10px">
         <label class="pill" for="scanInput">🔎 Barcode/Kürzel:</label>
-        <input id="scanInput" type="text" placeholder="z. B. SET-OR-123" style="min-width:320px">
-        <button class="btn" id="scanOpen">Packvorgang öffnen</button>
+        <input id="scanInput" type="text" placeholder="z. B. ACH-101" />
+        <button class="btn" id="scanOpen">Öffnen</button>
       </div>
     </div>
   </header>
 
-  <main>
-    <section class="card">
-      <div class="card-head">
-        <strong>Packplatz – Setliste</strong>
-        <span class="muted">Rechtsklick auf Tabellenkopf, um Spalten ein-/auszublenden (außer die ersten drei).</span>
+  <div class="layout">
+    <!-- LEFT: table replaces old list -->
+    <section class="panel">
+      <div class="panel-head">
+        <strong>Setliste</strong>
+        <span class="muted">Rechtsklick im Kopf: Spalten an/aus</span>
       </div>
       <div class="table-wrap">
         <table id="tbl">
@@ -84,15 +75,12 @@
               <th class="col-img sticky-0" data-key="img">Set Bild</th>
               <th class="col-code sticky-1" data-key="code">Kürzel</th>
               <th class="col-name sticky-2" data-key="name">Set Bezeichnung</th>
-              <th data-key="kind">Set/Einzel Instrument</th>
+              <th data-key="dept">Fachgebiet</th>
               <th data-key="status">Status</th>
               <th data-key="priority">Priorität</th>
-              <th data-key="indv">Individualnummern</th>
-              <th data-key="cc_owner">Kostenstelle (Eigentümer)</th>
-              <th data-key="cc_issue">Kostenstelle (Ausgabe an)</th>
-              <th data-key="storage">Lagerort</th>
+              <th data-key="owner">Kostenstelle (Eig.)</th>
+              <th data-key="issue">Kostenstelle (Ausgabe)</th>
               <th data-key="loan">Leih-Set</th>
-              <th data-key="disinf">Nur Desinfektion</th>
               <th data-key="risk">Risikogruppe</th>
               <th data-key="type">Typ</th>
             </tr>
@@ -101,321 +89,187 @@
         </table>
       </div>
     </section>
-  </main>
 
-  <!-- Kontextmenü für Spalten -->
-  <div class="ctx" id="colMenu">
-    <h4>Spalten anzeigen</h4>
-    <div id="colList"></div>
+    <!-- RIGHT: details view -->
+    <section class="panel">
+      <div class="panel-head"><strong id="dTitle">—</strong></div>
+      <div class="panel-body">
+        <div class="hero">
+          <img id="dImg" class="thumb" src="" alt="" />
+          <div>
+            <div id="dCode" class="muted">—</div>
+            <div id="dDept" class="muted">—</div>
+          </div>
+        </div>
+        <div class="grid cols-4" id="dMeta"></div>
+        <div class="line">
+          <div><strong>Instrumente</strong></div>
+          <div>
+            <button class="btn ghost" id="btnAddImg">Bilder hinzufügen</button>
+          </div>
+        </div>
+        <table style="width:100%;margin-top:8px">
+          <thead><tr><th style="text-align:left">Instrument</th><th>Soll</th><th>Kategorie</th><th>Bilder</th></tr></thead>
+          <tbody id="instBody"></tbody>
+        </table>
+        <div class="line">
+          <div class="row" style="gap:10px">
+            <a class="btn ghost" href="../../index.html">Home</a>
+            <button class="btn ghost">Packformular</button>
+            <button class="btn ghost" id="btnCancel">Stornieren</button>
+            <button class="btn" id="btnPack">Packen</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- Packvorgang Dialog -->
+  <div class="ctx" id="colMenu"><h4>Spalten anzeigen</h4><div id="colList"></div></div>
+
+  <!-- Packdialog (reuse from previous) -->
   <dialog id="packDlg">
-    <div class="modal-head">
+    <div class="panel-head">
       <strong id="packTitle">Packvorgang</strong>
-      <div>
-        <span class="chip">✔ <b id="cntOk">0</b></span>
-        <span class="chip">❗ <b id="cntPartial">0</b></span>
-        <span class="chip">✖ <b id="cntMissing">0</b></span>
-        <button class="btn ghost" id="packClose">✕</button>
-      </div>
+      <button class="btn ghost" id="packClose">✕</button>
     </div>
-    <div style="padding:12px 14px">
-      <table style="width:100%;border-collapse:collapse">
-        <thead><tr>
-          <th style="text-align:left">Instrument</th>
-          <th>Soll</th><th>Ist</th><th>Status</th><th>Grund</th><th>Aktion</th>
-        </tr></thead>
+    <div class="panel-body">
+      <table style="width:100%">
+        <thead><tr><th style="text-align:left">Instrument</th><th>Soll</th><th>Ist</th><th>Status</th><th>Grund</th></tr></thead>
         <tbody id="packBody"></tbody>
       </table>
     </div>
-    <div class="modal-foot">
+    <div class="panel-body" style="display:flex;justify-content:flex-end;gap:8px">
       <button class="btn ghost" id="packCancel">Stornieren</button>
       <button class="btn" id="packSave">Speichern</button>
-      <button class="btn primary" id="packComplete">Fertig packen</button>
+      <button class="btn" id="packComplete">Fertig packen</button>
     </div>
   </dialog>
 
   <script>
-    // ---- Konfiguration ----
-    const STORE_COLS = 'aemp.packplatz.columns.v1';
-    const STORE_SESS = 'aemp.pack.session.v1';
-
-    const COLUMNS = [
-      { key:'img',    label:'Set Bild', fixed:true },
-      { key:'code',   label:'Kürzel', fixed:true },
-      { key:'name',   label:'Set Bezeichnung', fixed:true },
-      { key:'kind',   label:'Set/Einzel Instrument' },
-      { key:'status', label:'Status' },
-      { key:'priority', label:'Priorität' },
-      { key:'indv',   label:'Individualnummern' },
-      { key:'cc_owner', label:'Kostenstelle (Eigentümer)' },
-      { key:'cc_issue', label:'Kostenstelle (Ausgabe an)' },
-      { key:'storage', label:'Lagerort' },
-      { key:'loan',     label:'Leih-Set' },
-      { key:'disinf',   label:'Nur Desinfektion' },
-      { key:'risk',     label:'Risikogruppe' },
-      { key:'type',     label:'Typ' }
-    ];
-
-    // Demo-Daten
+    // Demo dataset aligned with your screenshot codes
     const DATA = [
-      { img:'https://via.placeholder.com/64x40?text=Set',  code:'SET-OR-123', name:'Ortho Grundset groß',  kind:'Set',    status:'bereit',    priority:'hoch',    indv:'—',       cc_owner:'KST-1001', cc_issue:'OP-2', storage:'Regal A3', loan:'nein', disinf:'nein', risk:'kritisch A',   type:'Mehrweg' },
-      { img:'https://via.placeholder.com/64x40?text=Inst', code:'INST-4711',  name:'Pinzette Feinzahn 12cm', kind:'Einzel', status:'offen',    priority:'mittel', indv:'ID-99821', cc_owner:'KST-1001', cc_issue:'OP-1', storage:'Schublade B2', loan:'nein', disinf:'ja',   risk:'unkritisch',   type:'Einweg'  },
-      { img:'https://via.placeholder.com/64x40?text=Set',  code:'SET-GYN-44', name:'Gyn Set Basis',          kind:'Set',    status:'in Arbeit',priority:'niedrig', indv:'—',       cc_owner:'KST-2002', cc_issue:'OP-3', storage:'Regal C1', loan:'ja',   disinf:'nein', risk:'semikritisch B', type:'Mehrweg' }
+      {img:'https://via.placeholder.com/72x48?text=ACH-101', code:'ACH-101', name:'Standard-OP Set', dept:'Chirurgie', status:'Freigegeben', priority:'mittel', owner:'KST-1001', issue:'OP-1', loan:'nein', risk:'kritisch A', type:'Mehrweg'},
+      {img:'https://via.placeholder.com/72x48?text=ACH-102', code:'ACH-102', name:'Laparoskopie Set', dept:'Chirurgie', status:'Freigegeben', priority:'hoch', owner:'KST-1001', issue:'OP-2', loan:'nein', risk:'semikritisch B', type:'Mehrweg'},
+      {img:'https://via.placeholder.com/72x48?text=ACH-103', code:'ACH-103', name:'Orthopädie Standard', dept:'Ortho', status:'Freigegeben', priority:'niedrig', owner:'KST-2002', issue:'OP-3', loan:'ja', risk:'unkritisch', type:'Mehrweg'}
     ];
-
-    // Demo-Instrumentlisten je Set-Kürzel
     const DEMO_ITEMS = {
-      "SET-OR-123": [
-        { id:'inst-11', name:'Klemme Kocher 14cm', req:4 },
-        { id:'inst-12', name:'Schere Mayo 17cm', req:2 },
-        { id:'inst-13', name:'Pinzette anatomisch 14cm', req:2 }
+      'ACH-101': [
+        {id:'i1', name:'Skalpellgriff Nr. 4', req:2, cat:'Schneiden'},
+        {id:'i2', name:'Schere Metzenbaum 14 cm', req:1, cat:'Schneiden'},
+        {id:'i3', name:'Pinzette anatomisch 14 cm', req:2, cat:'Greifen'},
+        {id:'i4', name:'Klemme Kocher gebogen', req:2, cat:'Klemmen'},
+        {id:'i5', name:'Nadelhalter Mayo-Hegar 16 cm', req:1, cat:'Halten/Nähen'}
       ],
-      "SET-GYN-44": [
-        { id:'inst-21', name:'Spreizer klein', req:1 },
-        { id:'inst-22', name:'Kürette scharf', req:2 }
-      ]
+      'ACH-102': [{id:'j1', name:'Trokare', req:3, cat:'Laparoskopie'}],
+      'ACH-103': [{id:'k1', name:'Meißel 10mm', req:1, cat:'Ortho'}]
     };
 
-    const $ = (s,root=document)=>root.querySelector(s);
-    const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+    const COLUMNS = [
+      {key:'img',label:'Set Bild',fixed:true}, {key:'code',label:'Kürzel',fixed:true}, {key:'name',label:'Set Bezeichnung',fixed:true},
+      {key:'dept',label:'Fachgebiet'}, {key:'status',label:'Status'}, {key:'priority',label:'Priorität'},
+      {key:'owner',label:'Kostenstelle (Eig.)'}, {key:'issue',label:'Kostenstelle (Ausgabe)'},
+      {key:'loan',label:'Leih-Set'}, {key:'risk',label:'Risikogruppe'}, {key:'type',label:'Typ'}
+    ];
+    const STORE_COLS='aemp.packplatz.columns.v1';
 
-    // ---- Spaltenpräferenzen ----
-    function loadPrefs(){ try{ return JSON.parse(localStorage.getItem(STORE_COLS)) || {} }catch{ return {} } }
+    const $=(s,r=document)=>r.querySelector(s); const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+    function loadPrefs(){ try{ return JSON.parse(localStorage.getItem(STORE_COLS))||{} }catch{ return {} } }
     function savePrefs(p){ localStorage.setItem(STORE_COLS, JSON.stringify(p)); }
-    function setColVisibility(key, visible){
-      const th = document.querySelector(`th[data-key="${key}"]`);
-      if(th) th.style.display = visible ? '' : 'none';
-      $$(`td[data-key="${key}"]`).forEach(td => td.style.display = visible ? '' : 'none');
-    }
+    function setColVisibility(key,on){ const th=document.querySelector(`th[data-key="${key}"]`); if(th) th.style.display=on?'':'none'; $$(`td[data-key="${key}"]`).forEach(td=> td.style.display=on?'':'none'); }
 
-    // ---- Tabelle rendern ----
-    function badgeStatus(s){
-      const c = String(s||'').toLowerCase();
-      if(c.includes('bereit')) return `<span class="badge ok">bereit</span>`;
-      if(c.includes('arbeit')||c.includes('offen')) return `<span class="badge warn">${s}</span>`;
-      return `<span class="badge">${s||'—'}</span>`;
-    }
-    function badgePriority(p){
-      const c = String(p||'').toLowerCase();
-      if(c.includes('hoch')) return `<span class="badge ok">hoch</span>`;
-      if(c.includes('mittel')) return `<span class="badge">mittel</span>`;
-      if(c.includes('niedrig')) return `<span class="badge muted">niedrig</span>`;
-      return `<span class="badge">${p||'—'}</span>`;
-    }
+    function badgeStatus(s){ return `<span class="badge ok">${s}</span>`; }
 
+    // Render left table
     function renderTable(){
-      const tbody = $('#tbl tbody'); tbody.innerHTML = '';
+      const tb = $('#tbl tbody'); tb.innerHTML='';
       for(const row of DATA){
-        const tr = document.createElement('tr');
+        const tr=document.createElement('tr');
         tr.innerHTML = `
-          <td class="col-img sticky-0">${row.img?`<img src="${row.img}" alt="" style="width:64px;height:40px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,.1)">`:''}</td>
+          <td class="col-img sticky-0">${row.img?`<img src="${row.img}" alt="" style="width:64px;height:40px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.12)">`:''}</td>
           <td class="col-code sticky-1 mono">${row.code}</td>
           <td class="col-name sticky-2">${row.name}</td>
-          <td data-key="kind">${row.kind}</td>
+          <td data-key="dept">${row.dept||'—'}</td>
           <td data-key="status">${badgeStatus(row.status)}</td>
-          <td data-key="priority">${badgePriority(row.priority)}</td>
-          <td data-key="indv">${row.indv||'—'}</td>
-          <td data-key="cc_owner">${row.cc_owner||'—'}</td>
-          <td data-key="cc_issue">${row.cc_issue||'—'}</td>
-          <td data-key="storage">${row.storage||'—'}</td>
-          <td data-key="loan">${row.loan}</td>
-          <td data-key="disinf">${row.disinf}</td>
-          <td data-key="risk">${row.risk}</td>
-          <td data-key="type">${row.type}</td>
-        `;
-        tr.addEventListener('dblclick', ()=> openPack(row.code));
-        tbody.appendChild(tr);
+          <td data-key="priority">${row.priority||'—'}</td>
+          <td data-key="owner">${row.owner||'—'}</td>
+          <td data-key="issue">${row.issue||'—'}</td>
+          <td data-key="loan">${row.loan||'—'}</td>
+          <td data-key="risk">${row.risk||'—'}</td>
+          <td data-key="type">${row.type||'—'}</td>`;
+        tr.addEventListener('click',()=>selectSet(row.code));
+        tb.appendChild(tr);
       }
       const prefs = loadPrefs();
-      for(const col of COLUMNS){
-        if(col.fixed) continue;
-        const visible = prefs[col.key] !== false;
-        setColVisibility(col.key, visible);
-      }
+      for(const col of COLUMNS){ if(col.fixed) continue; const on = prefs[col.key] !== false; setColVisibility(col.key, on); }
     }
 
-    // ---- Kontextmenü Spalten ----
+    // Context menu for columns
     const menu = $('#colMenu');
     function buildMenu(){
-      const prefs = loadPrefs();
-      const list = $('#colList'); list.innerHTML = '';
-      for(const col of COLUMNS){
-        if(col.fixed) continue;
-        const visible = prefs[col.key] !== false;
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `<input type="checkbox" id="chk-${col.key}" ${visible?'checked':''}> <label for="chk-${col.key}">${col.label}</label>`;
+      const prefs=loadPrefs(); const list=$('#colList'); list.innerHTML='';
+      for(const col of COLUMNS){ if(col.fixed) continue; const on=prefs[col.key]!==false;
+        const div=document.createElement('div'); div.className='item';
+        div.innerHTML=`<input type="checkbox" id="chk-${col.key}" ${on?'checked':''}> <label for="chk-${col.key}">${col.label}</label>`;
         list.appendChild(div);
-        div.querySelector('input').addEventListener('change', (ev)=>{
-          const on = ev.currentTarget.checked;
-          const p = loadPrefs(); p[col.key] = on; savePrefs(p);
-          setColVisibility(col.key, on);
-        });
+        div.querySelector('input').addEventListener('change',(ev)=>{ const p=loadPrefs(); p[col.key]=ev.currentTarget.checked; savePrefs(p); setColVisibility(col.key, ev.currentTarget.checked); });
       }
     }
-    function showMenu(x,y){
-      buildMenu();
-      menu.style.display = 'block';
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const rect = menu.getBoundingClientRect();
-      const left = Math.min(x, vw - rect.width - 8);
-      const top  = Math.min(y, vh - rect.height - 8);
-      menu.style.left = left + 'px'; menu.style.top = top + 'px';
-    }
-    function hideMenu(){ menu.style.display = 'none'; }
-    document.addEventListener('click', (e)=>{ if(!menu.contains(e.target)) hideMenu(); });
-    document.getElementById('hdr').addEventListener('contextmenu', (e)=>{ e.preventDefault(); showMenu(e.clientX, e.clientY); });
-    document.getElementById('resetPrefs').addEventListener('click', ()=>{ localStorage.removeItem(STORE_COLS); renderTable(); });
+    function showMenu(x,y){ buildMenu(); menu.style.display='block'; const rect=menu.getBoundingClientRect(); menu.style.left=Math.min(x, window.innerWidth-rect.width-8)+'px'; menu.style.top=Math.min(y, window.innerHeight-rect.height-8)+'px'; }
+    function hideMenu(){ menu.style.display='none'; }
+    document.addEventListener('click',(e)=>{ if(!menu.contains(e.target)) hideMenu(); });
+    $('#hdr').addEventListener('contextmenu',(e)=>{ e.preventDefault(); showMenu(e.clientX,e.clientY); });
 
-    // ---- Barcode-Feld Verhalten ----
-    const scan = document.getElementById('scanInput');
+    // Barcode field -> open selection & dialog
+    const scan = $('#scanInput');
     function focusScan(){ scan.focus({preventScroll:true}); scan.select(); }
-    window.addEventListener('load', focusScan);
-    window.addEventListener('focus', focusScan);
-    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) focusScan(); });
-    setInterval(()=>{ if(document.activeElement !== scan) focusScan(); }, 5000);
+    window.addEventListener('load', focusScan); window.addEventListener('focus', focusScan); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) focusScan(); });
 
-    function openByScan(){
-      const code = (scan.value||'').trim();
-      if(!code) return;
-      const found = DATA.find(r => r.code.toLowerCase() === code.toLowerCase());
-      if(found){ openPack(found.code); }
+    function openByScan(){ const code=(scan.value||'').trim(); if(!code) return; selectSet(code); openPack(); }
+    $('#scanOpen').addEventListener('click', openByScan);
+    scan.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); openByScan(); } });
+
+    // RIGHT detail population
+    let currentCode = null;
+    function selectSet(code){
+      const row = DATA.find(r=>r.code===code); if(!row) return;
+      currentCode = code;
+      $('#dTitle').textContent = `${row.code} – ${row.name}`;
+      $('#dImg').src = row.img; $('#dCode').textContent = row.code; $('#dDept').textContent = row.dept||'';
+      const meta = [
+        ['Status', row.status], ['Priorität', row.priority||'—'], ['Eigentümer', row.owner||'—'], ['Ausgabe an', row.issue||'—'],
+        ['Leih-Set', row.loan||'—'], ['Risikogruppe', row.risk||'—'], ['Typ', row.type||'—'], ['Kürzel', row.code]
+      ];
+      const dMeta = $('#dMeta'); dMeta.innerHTML=''; for(const [k,v] of meta){ const div=document.createElement('div'); div.innerHTML=`<div class="muted">${k}</div><div>${v}</div>`; dMeta.appendChild(div); }
+      renderInst(code);
     }
-    document.getElementById('scanOpen').addEventListener('click', openByScan);
-    scan.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){ e.preventDefault(); openByScan(); }
-    });
-
-    // ---- Packvorgang ----
-    const dlg = document.getElementById('packDlg');
-    const body = document.getElementById('packBody');
-
-    function loadSession(code){
-      try{
-        const all = JSON.parse(localStorage.getItem(STORE_SESS)) || {};
-        return all[code] || null;
-      }catch{ return null }
-    }
-    function saveSession(code, data){
-      const all = (function(){ try{ return JSON.parse(localStorage.getItem(STORE_SESS)) || {} }catch{ return {} } })();
-      all[code] = data;
-      localStorage.setItem(STORE_SESS, JSON.stringify(all));
+    function renderInst(code){
+      const body = $('#instBody'); body.innerHTML='';
+      const items = DEMO_ITEMS[code]||[];
+      for(const it of items){ const tr=document.createElement('tr'); tr.innerHTML=`<td>${it.name}</td><td style="text-align:center">${it.req}</td><td>${it.cat||'—'}</td><td><button class="btn">Bilder hinzufügen</button></td>`; body.appendChild(tr); }
     }
 
-    function openPack(code){
-      const setRow = DATA.find(r => r.code === code);
-      if(!setRow) return;
-      document.getElementById('packTitle').textContent = `Packvorgang – ${setRow.name} (${setRow.code})`;
-
-      let session = loadSession(code);
-      if(!session){
-        const items = (DEMO_ITEMS[code] || [{id:'x1',name:'Unbekanntes Instrument',req:1}])
-          .map(x => ({ id:x.id, name:x.name, req:x.req, qty:x.req, state:'OK', reason:'' }));
-        session = { code, status:'DRAFT', items };
-        saveSession(code, session);
-      }
-
-      renderPack(session);
-      dlg.showModal();
-      setTimeout(focusScan, 0);
+    // Pack dialog reusing DEMO_ITEMS
+    function openPack(){
+      if(!currentCode) return;
+      const items = (DEMO_ITEMS[currentCode]||[]).map(x=>Object.assign({}, x, {qty:x.req, state:'OK', reason:''}));
+      document.getElementById('packTitle').textContent = `Packvorgang – ${currentCode}`;
+      const pb = document.getElementById('packBody'); pb.innerHTML='';
+      for(const it of items){ const tr=document.createElement('tr'); tr.innerHTML = `<td>${it.name}</td><td style="text-align:center">${it.req}</td>
+        <td style="text-align:center"><input type="number" min="0" max="${it.req}" value="${it.qty}" style="width:64px"></td>
+        <td style="text-align:center">✔</td><td><select><option>—</option><option>verloren</option><option>defekt</option></select></td>`; pb.appendChild(tr); }
+      document.getElementById('packDlg').showModal();
     }
-
-    function renderPack(session){
-      body.innerHTML = '';
-      for(const it of session.items){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${it.name}</td>
-          <td style="text-align:center">${it.req}</td>
-          <td style="text-align:center">
-            <button class="btn ghost btn-minus" data-id="${it.id}">−</button>
-            <span class="qty" data-id="${it.id}" style="display:inline-block;min-width:2ch;text-align:center">${it.qty}</span>
-            <button class="btn ghost btn-plus" data-id="${it.id}">+</button>
-          </td>
-          <td class="st" data-id="${it.id}" style="text-align:center"></td>
-          <td>
-            <select class="reason" data-id="${it.id}">
-              <option value="">—</option>
-              <option value="verloren">verloren</option>
-              <option value="defekt">defekt</option>
-              <option value="in Reparatur">in Reparatur</option>
-              <option value="nicht vorhanden">nicht vorhanden</option>
-            </select>
-          </td>
-          <td><button class="btn ghost btn-missing" data-id="${it.id}">als fehlend markieren</button></td>
-        `;
-        body.appendChild(tr);
-        tr.querySelector('.reason').value = it.reason || '';
-      }
-      $$('.btn-minus', body).forEach(b=> b.addEventListener('click', ()=> changeQty(session, b.dataset.id, -1)));
-      $$('.btn-plus', body).forEach(b=> b.addEventListener('click', ()=> changeQty(session, b.dataset.id, +1)));
-      $$('.btn-missing', body).forEach(b=> b.addEventListener('click', ()=> setMissing(session, b.dataset.id)));
-      $$('.reason', body).forEach(s=> s.addEventListener('change', (e)=> setReason(session, e.target.dataset.id, e.target.value)));
-      recalcStates(session);
-      updateCounters(session);
-    }
-
-    function changeQty(session, id, delta){
-      const it = session.items.find(x=>x.id===id); if(!it) return;
-      it.qty = Math.max(0, Math.min(it.req, (it.qty||0)+delta));
-      it.state = (it.qty===it.req) ? 'OK' : (it.qty===0 ? 'MISSING' : 'PARTIAL');
-      saveSession(session.code, session);
-      const span = body.querySelector(\`.qty[data-id="\${id}"]\`); if(span) span.textContent = it.qty;
-      const st = body.querySelector(\`.st[data-id="\${id}"]\`); if(st) st.innerHTML = renderState(it.state);
-      const reasonSel = body.querySelector(\`.reason[data-id="\${id}"]\`);
-      if(reasonSel){ reasonSel.disabled = (it.state==='OK'); }
-      updateCounters(session);
-    }
-    function setMissing(session, id){
-      const it = session.items.find(x=>x.id===id); if(!it) return;
-      it.qty = 0; it.state = 'MISSING';
-      saveSession(session.code, session);
-      renderPack(session);
-    }
-    function setReason(session, id, reason){
-      const it = session.items.find(x=>x.id===id); if(!it) return;
-      it.reason = reason;
-      saveSession(session.code, session);
-    }
-    function renderState(state){
-      if(state==='OK') return '✔';
-      if(state==='PARTIAL') return '❗';
-      if(state==='MISSING') return '✖';
-      return '—';
-    }
-    function recalcStates(session){
-      for(const it of session.items){
-        if(it.qty===it.req) it.state='OK';
-        else if(it.qty===0) it.state='MISSING';
-        else it.state='PARTIAL';
-        const reasonSel = body.querySelector(\`.reason[data-id="\${it.id}"]\`);
-        if(reasonSel) reasonSel.disabled = (it.state==='OK');
-        const st = body.querySelector(\`.st[data-id="\${it.id}"]\`);
-        if(st) st.innerHTML = renderState(it.state);
-      }
-    }
-    function updateCounters(session){
-      let ok=0, partial=0, miss=0;
-      for(const it of session.items){
-        if(it.state==='OK') ok++;
-        else if(it.state==='PARTIAL') partial++;
-        else if(it.state==='MISSING') miss++;
-      }
-      document.getElementById('cntOk').textContent = ok;
-      document.getElementById('cntPartial').textContent = partial;
-      document.getElementById('cntMissing').textContent = miss;
-    }
-
-    // Dialog-Buttons
-    document.getElementById('packClose').addEventListener('click', ()=> dlg.close());
-    document.getElementById('packSave').addEventListener('click', ()=>{ dlg.close(); setTimeout(focusScan,0); });
-    document.getElementById('packCancel').addEventListener('click', ()=>{ dlg.close(); setTimeout(focusScan,0); });
-    document.getElementById('packComplete').addEventListener('click', ()=>{ dlg.close(); setTimeout(focusScan,0); });
+    document.getElementById('btnPack').addEventListener('click', openPack);
+    document.getElementById('btnCancel').addEventListener('click', ()=> alert('Storniert (Demo)'));
+    document.getElementById('packClose').addEventListener('click', ()=> document.getElementById('packDlg').close());
+    document.getElementById('packCancel').addEventListener('click', ()=> document.getElementById('packDlg').close());
+    document.getElementById('packSave').addEventListener('click', ()=> document.getElementById('packDlg').close());
+    document.getElementById('packComplete').addEventListener('click', ()=> document.getElementById('packDlg').close());
 
     // Initial render
     renderTable();
+    selectSet(DATA[0].code);
   </script>
 </body>
 </html>
