@@ -1,26 +1,66 @@
-<!DOCTYPE html><html lang="de">\1\n  <base href="/aemp-upload-missing/">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Packplatz</title>
-<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.6">
-</head><body>
-<header class="appbar"><a href="/aemp-upload-missing/index.html" class="home">Home</a><div class="title">Packplatz</div></header>
-<main class="grid">
-  <aside id="setList"></aside>
-  <section id="details"></section>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <base href="/aemp-upload-missing/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Packplatz (Module)</title>
+  <link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.6">
+  <style>
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px}
+    .card{background:#0e1428;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px}
+  </style>
+</head>
+<body>
+<header class="appbar"><div class="title">Packplatz (Module)</div></header>
+<main class="content">
+  <div class="grid2">
+    <div id="left"  class="card"></div> <!-- Details -->
+    <div id="right" class="card"></div> <!-- Set-Inhalte -->
+  </div>
 </main>
-<<script src="/aemp-upload-missing/shared/core.js?v=1.1.6"></script>
-<<script src="/aemp-upload-missing/shared/state.js?v=1.1.6"></script>
-<<script src="/aemp-upload-missing/shared/data.js?v=1.1.6"></script>
-<script src="/aemp-upload-missing/shared/permissions.js?v=1.1.11"></script>
-<script src="/aemp-upload-missing/shared/users.js?v=1.1.7"></script>
-<<script src="/aemp-upload-missing/shared/image_store.js?v=1.1.6"></script>
-<<script src="/aemp-upload-missing/modules/packplatz/list.js?v=1.1.6"></script>
-<script src="/aemp-upload-missing/modules/packplatz/details.js?v=1.1.6"></script>
-<<script src="/aemp-upload-missing/modules/packplatz/pack.js?v=1.1.6"></script>
-<script>
-  AEMP.session.requireLogin();
-  window.selectedSetId ??= (AEMP.state.getData().sets[0]?.id || null);
-  Packplatz.renderSetList('');
-  Packplatz.renderDetails();
+
+<!-- WICHTIG: ES-Module laden -->
+<script type="module">
+  import { createDetailsPanel }  from '/aemp-upload-missing/modules/packplatz/details.js';
+  import { createContentsPanel } from '/aemp-upload-missing/modules/packplatz/contents.js';
+  import { createPackDialog }    from '/aemp-upload-missing/modules/packplatz/pack.js';
+  // optional: import { createSetList } from '/aemp-upload-missing/modules/packplatz/list.js';
+
+  // Demo-Daten (bitte an eure API anbinden)
+  const DEMO_SETS = [
+    { code:'SET-OR-123', name:'Ortho Grundset groß', status:'bereit',    storage:'Regal A3', img:'https://via.placeholder.com/64x40?text=Set' },
+    { code:'SET-GYN-44', name:'Gyn Set Basis',       status:'in Arbeit', storage:'Regal C1', img:'https://via.placeholder.com/64x40?text=Set' }
+  ];
+  const DEMO_ITEMS = {
+    "SET-OR-123":[{id:'i1',name:'Kocher 14cm',req:4,cat:'Klemmen'},{id:'i2',name:'Mayo 17cm',req:2,cat:'Scheren'}],
+    "SET-GYN-44":[{id:'i3',name:'Spreizer klein',req:1,cat:'Spreizer'}]
+  };
+
+  const details = createDetailsPanel(document.getElementById('left'), {
+    async loadDetails(row){
+      // Hier können echte Metadaten aus eurer API kommen
+      return { meta:{ Status:row.status, Lagerort:row.storage } };
+    }
+  });
+
+  const pack = createPackDialog({
+    async getItemsForSet(code){ return DEMO_ITEMS[code] || []; }
+  });
+
+  const contents = createContentsPanel(document.getElementById('right'), {
+    async loadItems(row){ return DEMO_ITEMS[row.code] || []; },
+    onPack(row){ pack.open({ code: row.code, name: row.name }); }
+  });
+
+  // Start: zeige erstes Set
+  const first = DEMO_SETS[0];
+  details.show(first);
+  contents.show(first);
+
+  // Beispiel: wenn du später eine Liste nutzt, rufst du bei Auswahl einfach:
+  // onSelect(row){ details.show(row); contents.show(row); }
 </script>
-</body></html>
+</body>
+</html>
+
