@@ -1,16 +1,24 @@
-<!DOCTYPE html><html lang="de">
-<head>
-  <base href="/aemp-upload-missing/">
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Steri – Freigabe</title>
-  <link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.6">
-</head>
-<body>
-<header class="appbar"><div class="title">Steri – Freigabe</div></header>
-<main class="content">
-  <div id="steriMount" class="card"></div>
+<!DOCTYPE html><html lang="de">\1\n  <base href="/aemp-upload-missing/">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steri-Freigabe</title>
+<link rel="stylesheet" href="/aemp-upload-missing/shared/shared.css?v=1.1.6">
+</head><body>
+<header class="appbar"><a href="/aemp-upload-missing/index.html" class="home">Home</a><div class="title">Steri-Freigabe</div></header>
+<main class="steri" style="padding:16px">
+  <input id="scan" class="btn ghost" style="width:100%;max-width:520px" placeholder="Etikett scannen (Enter)" autofocus>
+  <div style="height:10px"></div>
+  <table id="table" class="table">
+    <thead><tr><th>Etikett</th><th>Set</th><th>Status</th><th>Aktion</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div style="height:12px"></div>
+  <button id="btnFreigeben" class="btn primary">Markierte freigeben</button>
 </main>
 <script src="/aemp-upload-missing/shared/core.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/state.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/data.js?v=1.1.6"></script>
+<script src="/aemp-upload-missing/shared/permissions.js?v=1.1.11"></script>
+<script src="/aemp-upload-missing/shared/users.js?v=1.1.7"></script>
 <script src="/aemp-upload-missing/modules/steri/steri.js?v=1.1.6"></script>
-<script> AEMP_STERI.start(document.getElementById('steriMount')); </script>
+<script> AEMP.session.requireLogin(); Steri.init(); </script>
 </body></html>

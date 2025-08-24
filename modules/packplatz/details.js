@@ -1,69 +1,89 @@
-
-// modules/packplatz/details.js
-// Renders details of a selected set on the right pane, including instrument table.
-
-export function createSetDetails(container, options={}){
-  const cfg = {
-    getItemsForSet: async (code)=>[], // provider
-  };
-  Object.assign(cfg, options||{});
-
-  const el = document.createElement('div');
-  el.className = 'card pane';
-  el.innerHTML = `
-    <header>
-      <div class="detail-head">
-        <strong id="pp-d-title">Details</strong>
-        <span id="pp-d-status" class="badge muted">—</span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn ghost" id="pp-d-home">Home</button>
-        <button class="btn" id="pp-d-packform">Packformular</button>
-        <button class="btn ghost" id="pp-d-cancel">Stornieren</button>
-        <button class="btn" id="pp-d-pack">Packen</button>
-      </div>
-    </header>
-    <div class="body">
-      <div id="pp-d-meta" style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px">
-        <div><img id="pp-d-img" alt="" style="width:140px;height:88px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.12)"></div>
-        <div>
-          <div class="muted">Kürzel</div><div id="pp-d-code" style="font-weight:600">—</div>
-          <div class="muted" style="margin-top:6px">Lagerort</div><div id="pp-d-storage">—</div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Instrument</th><th>Soll</th><th>Kategorie</th></tr></thead>
-          <tbody id="pp-d-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-  `;
-  container.appendChild(el);
-
-  const $ = (s)=> el.querySelector(s);
-
-  async function loadItems(code){
-    const items = await cfg.getItemsForSet(code);
-    const tb = $('#pp-d-tbody'); tb.innerHTML='';
-    for(const it of items){
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${it.name}</td><td>${it.req ?? '—'}</td><td>${it.cat ?? '—'}</td>`;
-      tb.appendChild(tr);
+window.Packplatz = window.Packplatz || {};
+(function(ns){
+  function getSetById(id){ return (AEMP.state.getData().sets||[]).find(s=>s.id===id); }
+  function getInstById(id){ return (AEMP.state.getData().instruments||[]).find(i=>i.id===id); }
+  function getSetLines(setId){
+    return (AEMP.state.getData().setInstruments||[]).filter(x=>x.set_id===setId).map(x=>({qty_required:x.qty_required, instrument:getInstById(x.instrument_id)}));
+  }
+  function ensureFab(){
+    let fab = document.getElementById('fabActions');
+    if (!fab){
+      fab = document.createElement('div');
+      fab.id='fabActions'; fab.className='fab-fixed hidden';
+      fab.innerHTML = '<a href="'+location.origin+'{p}index.html" class="btn ghost">Home</a>'.replace('{p}','/aemp-upload-missing/') +
+                      '<button id="reportBtn" class="btn ghost">Packformular</button>'+
+                      '<button id="cancelBtn" class="btn danger">Stornieren</button>'+
+                      '<button id="startPack" class="btn primary">Packen</button>';
+      document.body.appendChild(fab);
     }
+    return fab;
+  }
+  function galleryHtml(entity, id){
+    const pics = (typeof AEMP_IMAGES!=='undefined' ? AEMP_IMAGES.listImages(entity,id) : []);
+    const thumbs = pics.map((p,idx)=>`<img class="ithumb" data-entity="${entity}" data-id="${id}" data-idx="${idx}" src="${p.thumb}" alt="">`).join('') || '<div class="subtle">kein Bild</div>';
+    return `<div class="gallery">${thumbs}</div>
+            <label class="btn small">
+              <input type="file" accept="image/*" multiple hidden data-upload="${entity}:${id}">
+              Bilder hinzufügen
+            </label>`;
+  }
+  function wireUploads(scope){
+    scope.querySelectorAll('input[type=file][data-upload]').forEach(inp=>{
+      inp.onchange = async ()=>{
+        if (typeof AEMP_IMAGES==='undefined'){ alert('Bildspeicher nicht geladen'); return; }
+        const [entity,id] = inp.dataset.upload.split(':');
+        await AEMP_IMAGES.addImages(entity, id, Array.from(inp.files||[]));
+        ns.renderDetails();
+      };
+    });
   }
 
-  const api = {
-    async showSet(set){
-      $('#pp-d-title').textContent = `${set.name||'—'}`;
-      $('#pp-d-status').textContent = set.status || '—';
-      $('#pp-d-code').textContent = set.code || '—';
-      $('#pp-d-storage').textContent = set.storage || '—';
-      const img = $('#pp-d-img');
-      if(set.img) { img.src = set.img; img.style.display='block'; } else { img.removeAttribute('src'); img.style.display='none'; }
-      await loadItems(set.code);
-    },
-    element: el
+  ns.renderDetails = function(){
+    const detailsEl = document.getElementById('details');
+    if (!detailsEl) return;
+    const sid = window.selectedSetId;
+    const s = getSetById(sid);
+    const fab = ensureFab();
+    if (!s){
+      detailsEl.innerHTML = '<div class="placeholder center" style="padding:32px"><h3>Wähle links ein Set aus</h3><p class="subtle">Dann siehst du hier die Details und kannst packen.</p></div>';
+      if (fab) fab.classList.add('hidden');
+      return;
+    }
+    const lines = getSetLines(s.id);
+    const rows = lines.map(l=>`
+      <tr>
+        <td><div>${l.instrument?.name||'-'}<div class="subtle">${l.instrument?.code||''}</div></div></td>
+        <td class="qty">${l.qty_required}</td>
+        <td>${l.instrument?.category||'-'}</td>
+        <td>${galleryHtml('instruments', l.instrument?.id||0)}</td>
+      </tr>`).join('');
+    detailsEl.innerHTML = `
+      <div class="vstack" style="gap:10px">
+        <div class="hstack" style="justify-content:space-between;align-items:center">
+          <h2>${s.code} – ${s.name}</h2>
+          <div>${galleryHtml('sets', s.id)}</div>
+        </div>
+        <table class="table">
+          <thead><tr><th>Instrument</th><th>Soll</th><th>Kategorie</th><th>Bilder</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    if (fab) fab.classList.remove('hidden');
+    wireUploads(detailsEl);
+    document.getElementById('startPack').onclick = ()=> window.Packplatz.startPack();
+    document.getElementById('cancelBtn').onclick = ()=> alert('Stornieren (Platzhalter)');
+    document.getElementById('reportBtn').onclick = ()=> alert('Packformular (Platzhalter)');
+// Permissions: show/hide action buttons
+try{
+  const u = AEMP.session.getUser()||{};
+  const role = (AEMP_USERS.list().find(x=>x.username===u.username)||{}).role||'';
+  const canForm = AEMP_PERMS.can(u.username, role, 'packplatz', 'packformular');
+  const canStorno = AEMP_PERMS.can(u.username, role, 'packplatz', 'stornieren');
+  const canPack = AEMP_PERMS.can(u.username, role, 'packplatz', 'packen');
+  document.getElementById('reportBtn').style.display = canForm ? '' : 'none';
+  document.getElementById('cancelBtn').style.display = canStorno ? '' : 'none';
+  document.getElementById('startPack').style.display = canPack ? '' : 'none';
+} catch(e){}
+
   };
-  return api;
-}
+})(window.Packplatz);
